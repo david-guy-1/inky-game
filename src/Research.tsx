@@ -1,4 +1,4 @@
-import { game_state_interface ,ores, parts, researching} from './State';
+import { game_state_interface ,resources, researching} from './State';
 
 function Research({state, update} :{state :  game_state_interface, update: Function }) {
     return  <> Research Laboratory <br /> Money : {state.money[2]} <br />
@@ -12,6 +12,7 @@ function Research({state, update} :{state :  game_state_interface, update: Funct
             }
             return lst; 
         }()}
+        {/* research lab can't sell items, instead  they get government grants */}
     </>
 }
 export default Research; 
