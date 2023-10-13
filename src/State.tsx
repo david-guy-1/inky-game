@@ -8,6 +8,7 @@ var researching : researching_type[] = ["sonar detection", "enhanced detection",
 
 interface game_state_interface {
   "money" : [number, number, number],
+  "worker wages" : [number, number, number],
   "workers" :  [number, number, number],
   "worker allocation" : {
     "mining" : {
@@ -60,6 +61,7 @@ interface game_state_interface {
 
 var game_state : game_state_interface =  {
   "money" : [0, 0, 0],
+  "worker wages" : [0, 0, 0],
   "workers" :  [0, 0, 0],
   "worker allocation" : {
     "mining" : {
@@ -109,4 +111,6 @@ var game_state : game_state_interface =  {
  "rocket design" : [false,false, false],
  }
 }
+game_state.money = [1000, 2000, 4000];
+game_state['worker wages'] = [1000, 1100, 1200];
 export {game_state, type game_state_interface, ores, parts, researching, type ore_type, type parts_type, type researching_type };

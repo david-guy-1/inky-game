@@ -14,6 +14,7 @@ s = ""
 s += """
 interface game_state_interface {
   "money" : [number, number, number],
+  "worker wages" : [number, number, number],
   "workers" :  [number, number, number],
   "worker allocation" : {
     "mining" : {
@@ -58,7 +59,8 @@ s += """ }
 t = s.replace("interface game_state_interface", "var game_state : game_state_interface = ")
 t = t.replace("boolean", "false")
 t = t.replace("number", "0")
-result = intro + "\n" + s + "\n" + t + "\n" + "export {game_state, type game_state_interface, ores, parts, researching, type ore_type, type parts_type, type researching_type };"
+variable_setters = "game_state.money = [1000, 2000, 4000];\ngame_state['worker wages'] = [1000, 1100, 1200];\n"
+result = intro + "\n" + s + "\n" + t + "\n" + variable_setters+"export {game_state, type game_state_interface, ores, parts, researching, type ore_type, type parts_type, type researching_type };"
 open("State.tsx", "w").write(result)
 print("done")
 print(os.getcwd())
