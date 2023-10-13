@@ -14,7 +14,7 @@ compare build-a-lot and candy box 2 (NOT an idle game)
 
 workers don't generate income  on their own, but you need them to do stuff.
 
-a mining company (exports raw materials), a computer company (exports electronics), and a space exploration company (exports know-how).
+a mining company (exports raw materials), a computer company (exports electronics), and a space exploration company (exports know-how/advance tech tree).
 
 each company has their own resources and cash, and must buy/sell from other companies.
 
@@ -26,5 +26,11 @@ end goal is to create a mining company on the moon, advance a tech tree.
 
 player does not choose to send contracts, it happens automatically when certain conditions are met (it will show that). sometimes it's better to refuse.
 
-contracts are, for example: allowing purchase of resources at all, allowing purchase at cheaper prices, 
+contracts are, for example: allowing purchase of resources at all, allowing purchase at cheaper prices, collaborate to develop a new technology (only with space exploration company). 
+
+contracts that are mandatory for progress - you can change your mind, but you need criteria met to be able to accept it.
+
+"bad" contracts are with the government (too many workers, not enough funds), 
+
+worker allocations: what to mine? which computer parts to make? what to research
 

@@ -1,12 +1,9 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
-//import './index.css'
+import {game_state, game_state_interface} from "./State.tsx";
 
-var game_state = {
-  "data" : 1, "status" : ["a", "b", 1, true]
-}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <App state={game_state}/>
-)
+    <App state={JSON.parse(JSON.stringify(game_state)) as game_state_interface}/>
+  )
+
