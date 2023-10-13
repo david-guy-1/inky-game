@@ -1,0 +1,30 @@
+ink + control multiple entities.
+
+ink in terms of contract signing.
+
+I guess you play as a kind of company, making business decisions.
+
+also play as a different company. 
+
+ok, so the idea is to play as multiple companies. sign contracts between them 
+
+manage multiple mutually interacting companies working towards their own goals, but can help each other.
+
+compare build-a-lot and candy box 2 (NOT an idle game)
+
+workers don't generate income  on their own, but you need them to do stuff.
+
+a mining company (exports raw materials), a computer company (exports electronics), and a space exploration company (exports know-how).
+
+each company has their own resources and cash, and must buy/sell from other companies.
+
+player has to adjust whether to sell to general public for money, or keep raw materials to send to other companies. 
+
+how about we make it turn-based ? (daily stuff).
+
+end goal is to create a mining company on the moon, advance a tech tree. 
+
+player does not choose to send contracts, it happens automatically when certain conditions are met (it will show that). sometimes it's better to refuse.
+
+contracts are, for example: allowing purchase of resources at all, allowing purchase at cheaper prices, 
+
