@@ -34,3 +34,7 @@ contracts that are mandatory for progress - you can change your mind, but you ne
 
 worker allocations: what to mine? which computer parts to make? what to research
 
+how do (mandatory) contracts work?
+
+companies will "say" things (you can see this on their menu) to hint at requirements. Once requirements are met, the "contracts" button on the main screen will light up. Contracts whose conditions are met will be listed. Player can click to "sign" those contracts.  
+
