@@ -288,9 +288,9 @@ cy.mount()
         };
     }
 }
-let vertices = ["Trade deal : Mining camp and computer factory", 
-"Trade deal : Mining camp and research laboratory", 
-"Trade deal : Computer factory and research laboratory", 
+let vertices = ["Trade deal : Hunting Lodge and Blacksmithing Guild", 
+"Trade deal : Hunting Lodge and Center of Research and Exploration", 
+"Trade deal : Blacksmithing Guild and Center of Research and Exploration", 
 "Government funding : Chips",
 "Government funding : Transistors",
 ]

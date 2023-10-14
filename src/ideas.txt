@@ -64,11 +64,26 @@ hunters ( acquire resources ):
 ["hunt for food", "chop trees", "hunt magic birds", "kill a fire demon", "kill an ice wyvern" , "kill a lich", "acquire phoenix eggs", "acquire fairy dust", "acquire dragon skin"]
 
 
+
 weapon smith (drain resources, ores (copper , iron , steel) are free ):
 
 
-["copper sword", "iron sword", "steel sword", "steel arrowheads", "ice sword" ,"fire sword", "holy sword", "frost bow", "arcane robes",  "omni-enchanted sword", "dragonhide armor" ]
+["make copper sword", "make iron sword", "make steel sword", "make steel arrowheads", "make ice sword" ,"make fire sword", "make holy sword", "make frost bow", "make arcane robes",  "make omni-enchanted sword", "make dragonhide armor" ]
 
+---
+
+resource names : ["food", "wood", "magic feathers", "fire spirits", "ice crystals", "orbs of darkness", "fairy dust","phoenix eggs",  "dragon skin"]
+
+["copper swords", "iron swords", "steel swords", "steel arrowheads", "ice swords","frost bows", "fire swords", "holy swords",  "arcane robes", "omni-enchanted words", "dragonhide armor"]
+
+[ "deal with famine", "explore land in the north","clear out copper mine",  "explore land in the south", "clear out iron mine","explore land in the east","fend off invaders", "clear out coal mine", "explore land in the west","grow kingdom", "research steelmaking", "research fletching","explore magma cave", "make deal with witches", "research elemental enchantments","explore ice cave", "make deal with angels","research holy enchantment", "open a portal to the land of the dead", "research fairy manipulation", "research advanced enchantment techniques","fend off magic invaders", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon"]
+
+for every vertex (contract) : 
+
+if it requires a resource, then add all of those resources
+
+
+---
 
 explorers (go on quests) : 
 
@@ -78,10 +93,7 @@ I'll equate explorers and contracts for now. contract must be signed before the 
 
 there are also side contracts - at some point the kingdom needs to grow. They need to make deals with witches, and so on. 
 
-["grow kingdom", "make deal with witches", "make deal with angels", "deal with famine", "fend off invaders"]
+["grow kingdom", "deal with famine", "make deal with witches", "make deal with angels", "fend off invaders"]
 
 bonus contracts are given a separate string (same dag, but they only have other bonuses as successors). they increase production or decrease wages
 
-----
-
-also, trading between groups might not be a good idea. 

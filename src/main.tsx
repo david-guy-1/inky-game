@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import {game_state_initial, game_state_interface} from "./State.tsx";
+import App from './App'
+import {game_state_initial, game_state_interface} from "./State";
+import React from 'react';
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

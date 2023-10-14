@@ -1,19 +1,57 @@
-import { contract, game_state_interface } from "./State";
-import { contractDag } from "./contract_info";
+import { contract, game_state_interface , resource_type} from "./State";
+import { contract_dag, contract_costs, main_contracts } from "./contract_info";
 
-let contract_hints : {[key in contract] : [string | undefined, string | undefined, string | undefined]}  = {
-    'mine and computer' : ["We need more workers, 5 should be enough", "We are running low on money. If we have $5000, we can do something", undefined],
-    "computer and research" : [undefined, "We want to trade with the research lab, but they're not funded enough. If they get a fund of more than $2000 per day, and we have $10000 or more, we can work something out", undefined], 
-    "grant for technology" : [undefined, "If we produce enough chips, say 10, the research lab can apply for government grants and get more money every day. ", undefined],
-    "mine and research" : ["We want to fund some research at the lab. To do so we'd need at least $15000+", undefined, undefined]
+let contract_hints : {[key in contract] : string}  = {
+    "explore land in the north": "",
+    "clear out copper mine": "",
+    "explore land in the south": "",
+    "clear out iron mine": "",
+    "explore land in the east": "",
+    "clear out coal mine": "",
+    "explore land in the west": "",
+    "research steelmaking": "",
+    "research fletching": "",
+    "explore magma cave": "",
+    "research elemental enchantments": "",
+    "explore ice cave": "",
+    "research holy enchantment": "",
+    "open a portal to the land of the dead": "",
+    "research fairy manipulation": "",
+    "research advanced enchantment techniques": "",
+    "explore mapped region": "",
+    "research dragonhide crafting": "",
+    "research dragon anatomy": "",
+    "kill dragon": "",
+    "grow kingdom": "",
+    "make deal with witches": "",
+    "make deal with angels": "",
+    "deal with famine": "",
+    "fend off invaders": "",
+    "fend off magic invaders": ""
 }
-function contract_string(state : game_state_interface , company : number) : string{ 
-    let exposed = contractDag.get_exposed_vertices(new Set((Object.keys(state.contracts) as contract[]).filter((x) => state.contracts[x] !== "not signed") ));
-    for(var item of exposed){
-        var hint = contract_hints[item][company];
-        if(hint !== undefined){
-            return hint;
+function contract_string(state : game_state_interface) : string{ 
+    let exposed = contract_dag.get_exposed_vertices(new Set((Object.keys(state.contracts) as contract[]).filter((x) => state.contracts[x] !== "not signed") ));
+    for(let item of exposed){
+        // don't hint for main contracts
+        if(main_contracts.indexOf(item) === -1){
+            continue; 
         }
+        let hint = contract_hints[item];
+        hint += "This will require " 
+        let cost = contract_costs[item];
+
+        for(let res  in Object.keys(cost.resources)){
+            let costN = cost.resources[res as resource_type] 
+            if(costN !== undefined){
+                hint += costN.toString() + " " + res + ","
+            }
+        } 
+        if(cost.money !== 0){
+            hint += " and " + cost.money.toString() + " gold."
+        } else { 
+            hint += " and no gold."
+        }
+        return hint;
     }
     return "Everything is going well";
 }

@@ -1,8 +1,10 @@
 import json 
 import os
-resources = ["iron", "steel","circuits", "chips", "transistors"]
-researching = ["sonar detection","enhanced detection","circuit design" ,"microchips" ,"robotics 1","robotics 2" ,"rocket design"]
-contracts = ["mine and computer", "mine and research", "computer and research", "grant for technology"]
+resources = ["food", "wood", "magic feathers", "fire spirits", "ice crystals", "orbs of darkness", "phoenix eggs", "fairy dust", "dragon skin", "copper swords", "iron swords", "steel swords", "steel arrowheads", "ice swords", "fire swords", "holy swords", "frost bows", "arcane robes", "omni-enchanted swords", "dragonhide armor"]
+researching = ["explore land in the north","clear out copper mine",  "explore land in the south", "clear out iron mine","explore land in the east","clear out coal mine", "explore land in the west", "research steelmaking", "research fletching","explore magma cave", "research elemental enchantments","explore ice cave", "research holy enchantment", "open a portal to the land of the dead", "research fairy manipulation", "research advanced enchantment techniques", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon"]
+
+contracts = researching + ["grow kingdom", "make deal with witches", "make deal with angels", "deal with famine", "fend off invaders", "fend off magic invaders"]
+
 contract_states = ["not signed", "in progress", "complete"]
 intro = "type resource_type = " + "|".join(map(lambda x : "\"" + x + "\"", resources) ) + ";\n"
 intro += "type researching_type = " + "|".join(map(lambda x : "\"" + x + "\"", researching)) + ";\n"
@@ -13,7 +15,7 @@ intro += "var researching : researching_type[] = " + json.dumps(researching) + "
 s = ""
 s += """
 interface game_state_interface {
-  "money" : [number, number, number],
+  "money" : number,
   "research grant" : number,
   "worker wages" : [number, number, number],
   "workers" :  [number, number, number],
@@ -27,7 +29,7 @@ s += """,
     "building" : {
 """ 
 for item in resources:
-    s += """ "thing" : [number, number, number],\n""".replace("thing", item)  
+    s += """ "thing" : number,\n""".replace("thing", item)  
 s += """},
 "researching" : {
 """
@@ -38,7 +40,7 @@ s += """}
   "resources" : {
 """
 for item in resources:
-    s += """ "thing" :  [number, number, number],\n""".replace("thing", item)
+    s += """ "thing" :  number,\n""".replace("thing", item)
 
 s += """  },
   "tech tree" : {
@@ -65,9 +67,8 @@ t = t.replace("number", "0")
 
 t = t.replace("contract_state", "\"not signed\"")
 variable_setters = """
-game_state_initial.money = [1000, 2000, 4000];
+game_state_initial.money =1000;
 game_state_initial['worker wages'] = [1000, 1100, 1200];
-game_state_initial["selling prices"] = {"iron": 3000, "steel": 4000, "circuits": 5000, "chips": 6000, "transistors": 7000};
  """
 result = intro + "\n" + s + "\n" + t + "\n" + variable_setters+"export {game_state_initial, type contract, type game_state_interface, resources, researching,  type resource_type, type researching_type };"
 open("State.tsx", "w").write(result)
