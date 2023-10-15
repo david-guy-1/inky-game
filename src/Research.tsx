@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react';
-import { game_state_interface ,resources} from './State';
+import { game_state_interface ,main_contracts,resources} from './State';
 import contract_string from './contract_string';
-import { main_contracts } from './contract_info';
 import Resource from './Resource';
 
 function Research({state, update} :{state :  game_state_interface, update: Function }) {

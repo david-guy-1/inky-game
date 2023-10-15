@@ -1,34 +1,41 @@
 import dag from "./dag"
-import { contract, game_state_interface, main_contract_type, resource_type } from "./State"
+import { contract, contracts, game_state_interface, main_contract_type, resource_type } from "./State"
 
-let main_contracts : main_contract_type[] = ["explore land in the north","clear out copper mine",  "explore land in the south", "clear out iron mine","explore land in the east", "clear out coal mine", "explore land in the west", "research steelmaking", "research steel fletching","explore magma cave", "grow kingdom","research elemental enchantments","explore ice cave","research holy enchantment", "open a portal to the land of the dead", "make deal with fairies", "research advanced enchantment techniques", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon"]
+let storyline_contracts : contract[] = ["explore land in the north","clear out copper mine",  "explore land in the south", "clear out iron mine","explore land in the east", "clear out coal mine", "explore land in the west", "research steelmaking", "research steel fletching","explore magma cave", "grow kingdom","research elemental enchantments","explore ice cave","research holy enchantment", "open a portal to the land of the dead", "make deal with fairies", "research advanced enchantment techniques", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon"]
 
-let contracts : contract[] =["fend off invaders", "fend off magic invaders", "make some food", "make deal with angels", "make deal with witches"]
 
-contracts = contracts.concat(main_contracts);
+
+let deadlines : Partial<Record<contract, number>> = {
+    "clear out copper mine" : 10,
+    "explore land in the west" : 30,
+    "grow kingdom" : 50,
+    "research holy enchantment" : 75,
+    "kill dragon" : 100
+}
+
 
 let edges : [contract, contract][] = []
-for(var i=0; i < main_contracts.length-1; i++){
-    var predecessor : contract = main_contracts[i];
-    if((["research steelmaking", "research steel fletching", "explore land in the west"] as contract[]).indexOf(main_contracts[i+1]) !==  -1){
+for(var i=0; i < storyline_contracts.length-1; i++){
+    var predecessor : contract = storyline_contracts[i];
+    if((["research steelmaking", "research steel fletching", "explore land in the west"] as contract[]).indexOf(storyline_contracts[i+1]) !==  -1){
         predecessor = "clear out coal mine";
     }
-    if((["explore ice cave"] as contract[]).indexOf(main_contracts[i+1]) !==  -1){
+    if((["explore ice cave"] as contract[]).indexOf(storyline_contracts[i+1]) !==  -1){
         predecessor = "explore magma cave";
     }
-    if((["clear out coal mine"] as contract[]).indexOf(main_contracts[i+1]) !==  -1){
+    if((["clear out coal mine"] as contract[]).indexOf(storyline_contracts[i+1]) !==  -1){
         predecessor = "explore land in the east";
     }
-    if((["make deal with witches"] as contract[]).indexOf(main_contracts[i+1]) !==  -1){
+    if((["make deal with witches"] as contract[]).indexOf(storyline_contracts[i+1]) !==  -1){
         predecessor = "grow kingdom";
     }
-    if((["make deal with fairies"] as contract[]).indexOf(main_contracts[i+1]) !==  -1){
+    if((["make deal with fairies"] as contract[]).indexOf(storyline_contracts[i+1]) !==  -1){
         predecessor = "make deal with angels";
     }
-    if((["research dragon anatomy"] as contract[]).indexOf(main_contracts[i+1]) !==  -1){
+    if((["research dragon anatomy"] as contract[]).indexOf(storyline_contracts[i+1]) !==  -1){
         predecessor = "explore mapped region";
     }
-    edges.push([predecessor, main_contracts[i+1]]); 
+    edges.push([predecessor, storyline_contracts[i+1]]); 
 }
 
 
@@ -44,146 +51,175 @@ edges.push(["fend off magic invaders", "explore mapped region"]);
 edges.push(["explore ice cave", "make deal with angels"]);
 
 edges.push(["grow kingdom", "make deal with witches"]);
+edges.push(["grow kingdom", "make trade deal"]);
 edges.push(["make deal with witches", "research elemental enchantments"]);
 edges.push(["make deal with witches", "make deal with angels"]);
 edges.push(["make deal with angels", "research holy enchantment"]);
 edges.push(["fend off invaders", "explore land in the west"]);
+edges.push(["fend off invaders", "investigate monsters"])
 
-console.log(edges)
+edges.push(["research holy enchantment", "help the witches"])
+
+edges.push(["fend off magic invaders", "help the angels"])
+edges.push(["grow kingdom", "make trade deal"])
+
+// extra contracts go HERE
+
+
+
 var contract_dag : dag<contract> = new dag<contract>(contracts, edges)
 
 let contract_costs : {[key in contract] : {money : number, resources : Partial<Record<resource_type, number>> , reward : number}} = {
     "make some food": {
         money: 0,
-        resources:  {"food" : 4},
+        resources: { "food": 4 },
         reward: 400
     },
     "explore land in the north": {
         money: 1000,
-        resources: {"food" : 4},
+        resources: { "food": 4 },
         reward: 0
     },
     "clear out copper mine": {
         money: 1000,
-        resources:  {"food": 4, "wood":3},
+        resources: { "food": 4, "wood": 3 },
         reward: 100
     },
     "explore land in the south": {
         money: 1500,
-        resources:  {"food": 4},
+        resources: { "food": 4 },
         reward: 0
     },
     "clear out iron mine": {
         money: 1500,
-        resources:  {"copper swords" : 3, "food" : 5},
+        resources: { "copper swords": 3, "food": 5 },
         reward: 200
     },
     "explore land in the east": {
         money: 1500,
-        resources:  {"food": 3},
+        resources: { "food": 3 },
         reward: 0
     },
     "fend off invaders": {
         money: 0,
-        resources:  {"iron swords" : 3},
+        resources: { "iron swords": 3 },
         reward: 500
     },
     "clear out coal mine": {
         money: 1700,
-        resources:  {"iron swords" : 4, "food" : 3},
+        resources: { "iron swords": 4, "food": 3 },
         reward: 300,
     },
-    "explore land in the west": { // unlocks magic feathers
+    "explore land in the west": {
         money: 2000,
-        resources:  {"food" : 3},
+        resources: { "food": 3 },
         reward: 0
     },
     "grow kingdom": {
         money: 6000,
-        resources:  {"wood": 10, "food" : 10},
+        resources: { "wood": 10, "food": 10 },
         reward: 1000
     },
     "research steelmaking": {
         money: 1000,
-        resources:  {"food" : 4, "wood" : 5, "iron swords" : 3},
+        resources: { "food": 4, "wood": 5, "iron swords": 3 },
         reward: 0
     },
     "research steel fletching": {
         money: 1500,
-        resources:  {"wood": 10},
+        resources: { "wood": 10 },
         reward: 0
     },
     "explore magma cave": {
         money: 3000,
-        resources:  {"steel swords" : 5, "steel arrowheads" : 5},
+        resources: { "steel swords": 5, "steel arrowheads": 5 },
         reward: 0
     },
     "make deal with witches": {
         money: 10000,
-        resources:  {"fire spirits" : 7, "magic feathers" : 4},
+        resources: { "fire spirits": 7, "magic feathers": 4 },
         reward: 1200
     },
     "research elemental enchantments": {
         money: 4000,
-        resources:  {"food" : 10, "wood" : 10, "fire spirits" : 10,  "magic feathers" : 6},
+        resources: { "food": 10, "wood": 10, "fire spirits": 10, "magic feathers": 6 },
         reward: 500
     },
     "explore ice cave": {
         money: 5000,
-        resources:  {"fire swords" : 10, "food" : 10, "fire spirits" : 5, "arcane robes" : 5},
+        resources: { "fire swords": 10, "food": 10, "fire spirits": 5, "arcane robes": 5 },
         reward: 0
     },
     "make deal with angels": {
         money: 20000,
-        resources:  {"fire spirits" :10, "ice crystals" : 10, "arcane robes" : 10},
+        resources: { "fire spirits": 10, "ice crystals": 10, "arcane robes": 10 },
         reward: 2000
     },
     "research holy enchantment": {
         money: 5500,
-        resources:  {"fire spirits" : 10, "ice crystals" : 10, "food": 15,  "magic feathers" : 20},
+        resources: { "fire spirits": 10, "ice crystals": 10, "food": 15, "magic feathers": 20 },
         reward: 500
     },
-    "open a portal to the land of the dead": { // unlocks orbs of darkness
+    "open a portal to the land of the dead": {
         money: 6000,
-        resources:  {"fire spirits" : 10, "magic feathers" : 20, "holy swords" : 20},
+        resources: { "fire spirits": 10, "magic feathers": 20, "holy swords": 20 },
         reward: 1000
     },
-    "make deal with fairies": { // unlcoks fairy dust
+    "make deal with fairies": {
         money: 10000,
-        resources:  {"fire spirits" : 10, "ice crystals" : 15, "magic feathers" : 20},
+        resources: { "fire spirits": 10, "ice crystals": 15, "magic feathers": 20 },
         reward: 2500
     },
-    "research advanced enchantment techniques": { // unlocks omni
+    "research advanced enchantment techniques": {
         money: 15000,
-        resources:  {"fire spirits" : 10, "ice crystals" : 15,"fairy dust" : 20},
+        resources: { "fire spirits": 10, "ice crystals": 15, "fairy dust": 20 },
         reward: 1000
     },
     "fend off magic invaders": {
         money: 0,
-        resources:  {"frost bows" : 10, "fire swords" : 10, "ice swords" :10, "holy swords" : 10, "arcane robes" : 15},
+        resources: { "frost bows": 10, "fire swords": 10, "ice swords": 10, "holy swords": 10, "arcane robes": 15 },
         reward: 3000
     },
-    "explore mapped region": { // unlocks dragon and phoenix stuff
+    "explore mapped region": {
         money: 30000,
-        resources:  {"frost bows" : 20, "holy swords" : 20},
+        resources: { "frost bows": 20, "holy swords": 20 },
         reward: 0
     },
     "research dragonhide crafting": {
         money: 40000,
-        resources:  {"orbs of darkness" : 10, "phoenix eggs" : 10, "fairy dust" : 10},
+        resources: { "orbs of darkness": 10, "phoenix eggs": 10, "fairy dust": 10 },
         reward: 0
     },
     "research dragon anatomy": {
         money: 50000,
-        resources:  {"dragon skin" : 10, "phoenix eggs" : 20},
+        resources: { "dragon skin": 10, "phoenix eggs": 20 },
         reward: 2000
     },
     "kill dragon": {
         money: 100000,
-        resources:  {"fire swords" : 50, "ice swords" : 50, "holy swords" : 100, "frost bows" : 100, "dragonhide armor" : 200, "omni-enchanted swords" : 200},
+        resources: { "fire swords": 50, "ice swords": 50, "holy swords": 100, "frost bows": 100, "dragonhide armor": 200, "omni-enchanted swords": 200 },
         reward: 0
     },
-    
+    "make trade deal": {
+        money: 10,
+        resources: {food : 10, wood : 10, "copper swords" : 10},
+        reward: 1000
+    },
+    "help the witches": {
+        money: 1000,
+        resources: {"magic feathers" : 10, "holy swords" : 10},
+        reward: 0
+    },
+    "help the angels": {
+        money: 0,
+        resources: {"holy swords" : 10, "orbs of darkness" : 20},
+        reward: 0
+    },
+    "investigate monsters": {
+        money: 0,
+        resources: {"ice crystals" : 5},
+        reward: 0
+    }
 }
 let resource_requirements : Record<resource_type, contract[]> = {
     food: [],
@@ -223,82 +259,94 @@ console.log(contract_dag.output());
 
 let contract_conditions : {[key in contract ] : (a : game_state_interface ) => boolean } = {
     "explore land in the north": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "clear out copper mine": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "explore land in the south": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "clear out iron mine": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "explore land in the east": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "clear out coal mine": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "explore land in the west": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "research steelmaking": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "research steel fletching": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "explore magma cave": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "research elemental enchantments": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "explore ice cave": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "research holy enchantment": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "open a portal to the land of the dead": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "make deal with fairies": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "research advanced enchantment techniques": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "explore mapped region": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "research dragonhide crafting": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "research dragon anatomy": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "kill dragon": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "grow kingdom": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "make deal with witches": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "make deal with angels": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "make some food": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "fend off invaders": function (a: game_state_interface): boolean {
-        return true;
+        return true
     },
     "fend off magic invaders": function (a: game_state_interface): boolean {
-        return true;
+        return true
+    },
+    "make trade deal": function (a: game_state_interface): boolean {
+        return a.grow_event
+    },
+    "help the witches": function (a: game_state_interface): boolean {
+        return a.witch_event
+    },
+    "help the angels": function (a: game_state_interface): boolean {
+        return a.angel_event
+    },
+    "investigate monsters": function (a: game_state_interface): boolean {
+        return a.invader_event
     }
 }
 /*
@@ -332,10 +380,13 @@ let preambles : {[key in contract] : string} = {
     "make deal with angels": "This contract is between the Center of Research and Exploration and the angel choir. They are to reveal the secrets to holy enchantment in exchange for magical items.",
     "make some food": "This contract is between the King and the Hunting Lodge. They are to provide food for the kingdom.",
     "fend off invaders": "This contract is between the King and the military force. They are to fight off monsters that are invading our lands. ",
-    "fend off magic invaders": "This contract is between the King and the magic guild. They are to fight off the magical monsters that are invading our lands."
+    "fend off magic invaders": "This contract is between the King and the magic guild. They are to fight off the magical monsters that are invading our lands.",
+    "make trade deal": "This contract is between our kingdom and the other kingdom. It is about a trade deal that is to be established.",
+    "help the witches": "We are offering our help in exchange for allyship.",
+    "help the angels": "We are offering our help to fight off the undead invasion of the angel realm.",
+    "investigate monsters": "This contract is between the King and the Center of Research and Exploration. They are to investigate the effects of ice on the monsters that invaded us."
 }
 let postambles : {[key in contract] : string} = {
-    
     "make some food": "We've made some food so people won't go hungry",
     "explore land in the north": "We found a copper mine that's infested with monsters. We need to clear it to mine copper there. ",
     "clear out copper mine": "We've cleared out the copper mine and our miners have begun to work there (You can now make copper swords)",
@@ -362,6 +413,10 @@ let postambles : {[key in contract] : string} = {
     "research dragonhide crafting": "Dragon skin is useful for armor. We've developed a new kind of armor using it (You can now make dragonhide armor)",
     "research dragon anatomy": "We've figured out where to best strike the dragon to maximize the chance of killing them.",
     "kill dragon": "We did it! The dragon is no more!",
+    "make trade deal": "We have established a trade deal. We can now sell for more and hire for less",
+    "help the witches": "The witches have offered to pay some of our wages. We can now hire for less",
+    "help the angels": "The angels are thankful and will give us a holy sword every day.",
+    "investigate monsters": "The monsters have developed some form of ice manipulation. We learned this technology and can now make two ice swords per worker per day."
 }
 
 var resource_maker : {[key in resource_type] : string} = {"food": "hunt for food", "wood": "chop trees", "magic feathers": "hunt magic birds", "fire spirits": "kill a fire demon", "ice crystals": "kill an ice wyvern", "orbs of darkness": "kill a lich", "phoenix eggs": "acquire phoenix eggs", "fairy dust": "collect fairy dust", "dragon skin": "collect dragon skin", "copper swords": "make copper sword", "iron swords": "make iron sword", "steel swords": "make steel sword", "steel arrowheads": "make steel arrowheads", "ice swords": "make ice sword", "fire swords": "make fire sword", "holy swords": "make holy sword", "frost bows": "make frost bow", "arcane robes": "make arcane robes", "omni-enchanted swords": "make omni-enchanted sword", "dragonhide armor": "make dragonhide armor"}
@@ -392,7 +447,11 @@ let quest_length  : {[key in contract] : number}   = {
     "make deal with angels": 10,
     "make some food": 2,
     "fend off invaders": 3,
-    "fend off magic invaders":25
+    "fend off magic invaders": 25,
+    "make trade deal": 5,
+    "help the witches": 10,
+    "help the angels": 17,
+    "investigate monsters": 7
 }
 
-export  {contract_dag, contracts, preambles, postambles , resource_maker, main_contracts, contract_costs, resource_requirements, contract_conditions, quest_length}
+export  {contract_dag, preambles, postambles , resource_maker, contract_costs, resource_requirements, contract_conditions, quest_length, deadlines}

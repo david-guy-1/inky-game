@@ -1,8 +1,7 @@
 import { useEffect, useState , useRef, useReducer, ReactElement} from 'react'
 import _, { set } from "lodash";
-import "phaser";
 import Options from './Options'
-import { game_state_interface ,resources, contract, main_contract_type} from './State';
+import { game_state_interface ,resources, contract, main_contract_type, main_contracts, contracts} from './State';
 import Computer from './ProducingCompany';
 import Research from './Research';
 import ProducingCompany from './ProducingCompany'
@@ -10,9 +9,9 @@ import Contract from './Contract';
 import ContractSigning from './ContractSigning';
 import React from 'react';
 import contract_string from './contract_string';
-import { contract_costs, contracts, main_contracts, postambles, quest_length } from './contract_info';
+import { contract_costs, deadlines, postambles, quest_length } from './contract_info';
 
-type location = "hunter" | "smith" | "explorer"  |"total" | "contract" | "signing" | "donequests" | "warn"
+type location = "hunter" | "smith" | "explorer"  |"total" | "contract" | "signing" | "donequests" | "warn" | "events"
 // mutates state
 
 
@@ -25,7 +24,7 @@ function compute_wages(state : game_state_interface) : [[number, number, number]
   }
   return [workers, costs];
 }
-function nextDay(state : game_state_interface) : contract[] | string{
+function nextDay(state : game_state_interface) : {"contracts" : contract[], "events" : string[]} | string{
   // check if you can 
 
   var wages = compute_wages(state);
@@ -34,8 +33,17 @@ function nextDay(state : game_state_interface) : contract[] | string{
   }
   state.day += 1;
   // generate parts
+  if(state.contracts['help the angels'] === "complete"){
+    state.resources['holy swords'] += 1;
+  }
+  
   for(var item of resources){
+    if(item === "ice swords" && state.contracts['investigate monsters'] === "complete"){
+      state.resources[item] += 2*state['worker allocation']["building"][item];
+    }  else {
       state.resources[item] += state['worker allocation']["building"][item];
+    }
+      
   }
 
   // pay wages
@@ -64,8 +72,59 @@ function nextDay(state : game_state_interface) : contract[] | string{
   // give out rewards
   for(var contract of done){
     state['research grant'] += contract_costs[contract].reward;
+    if(contract === "make trade deal"){
+      state['worker wages'][0] -= 200;
+      state['worker wages'][1] -= 200;
+      state['worker wages'][2] -= 200;
+      for(var obj of Object.keys(state['selling prices'])){
+        //@ts-ignore
+        state['selling prices'][obj] = Math.floor(state['selling prices'][obj] * 1.5)
+      }
+    }
+    if(contract === "help the witches"){
+      state['worker wages'][0] -= 300;
+      state['worker wages'][1] -= 300;
+      state['worker wages'][2] -= 300;
+    }
   }
-  return done;
+  // events
+  let events : string[] = [];
+  // deadlines
+  var deadline_cost = 0;
+  for(var contract of contracts){
+    if(deadlines[contract] !== undefined && state.contracts[contract] !== "complete" && state.day > (deadlines[contract] as number)){
+      deadline_cost += 100
+    }
+  } 
+  if(state.day % 7  === 5){
+    events.push("Due to advancements in technology by rival kingdoms, the prices of all goods have decreased")
+    for(var sell_item of Object.keys(state['selling prices'])){
+      // @ts-ignore
+      state['selling prices'][sell_item] = Math.floor(state['selling prices'][sell_item] * 0.95);
+    }
+  }
+  if(deadline_cost !== 0){
+    events.push("The king thinks you're slacking off since you have not progressed fast enough. Complete more quests to prevent this. " + "-" + deadline_cost.toString() + "/day")
+    state['research grant'] -= deadline_cost;
+  }
+  if(state.invader_event === false && state.contracts['fend off invaders'] === "complete" && state.day > 20){
+    events.push("The monsters have something going on with them. They seem to be responding to something cold. Get some ice crystals and investigate this");
+    state.invader_event = true;
+  }
+  if(state.witch_event === false && state.contracts["research holy enchantment"] === "complete" && state.day % 7 === 0){
+    events.push("The witches need our help. Get them some magic feathers and holy swords. ");
+    state.witch_event = true;
+  }
+
+  if(state.angel_event === false && state.contracts["fend off magic invaders"] === "complete" && state.day % 7 === 4){
+    events.push("The angels are dealing with an undead invasion. They want us to provide holy swords and orbs of darkness. ");
+    state.angel_event = true;
+  }
+  if(state.grow_event === false && state.contracts["grow kingdom"] === "complete" && state.day % 7 === 1){
+    events.push("A neighboring kingdom wants to do a trade deal with us. It will cost us some money and some resources. They are lookig for food, wood and some copper swords too");
+    state.grow_event = true;
+  }
+  return {"contracts" : done, "events" : events};
 }
 function App({state} :{state :  game_state_interface}) {
 
@@ -74,10 +133,13 @@ function App({state} :{state :  game_state_interface}) {
   const [contractData, goSign] = useState("");
   const [warning, setWarning] = useState("");
   const [doneQuests, setDoneQuests] = useState<contract[]>([]);
+  const [events, setEvents] = useState<string[]>([]);
   var wages = compute_wages(state); 
   if(display !== "donequests" && doneQuests.length !== 0){
     setDisplay("donequests");
-  } else if (display === "donequests" && doneQuests.length === 0){
+  } else if(display !== "events" && doneQuests.length === 0 && events.length !== 0){
+    setDisplay("events");
+  } else if ((display === "donequests" && doneQuests.length === 0) || (display === "events" && events.length === 0)){
     setDisplay("total");
   } 
   return (
@@ -92,7 +154,7 @@ function App({state} :{state :  game_state_interface}) {
             return  <div>Task completed :  {quest}<br /><span style={{"width" : "700px", display: "inline-block"}}> {postambles[quest]}<br />{contract_costs[quest].reward !== 0 ? "+" + contract_costs[quest].reward  + "gold / day" : null} </span><img src={"top bar/next.png"} style={{position:"absolute", "top" : "0px", "left":"720px"}} onClick={() => { setDoneQuests(doneQuests.slice(0, doneQuests.length-1)) } } /></div>
           }
         }()}
-        {display ===  "signing" || display === "donequests" ? null : <>
+        {display ===  "signing" || display === "donequests" || display === "events" ? null : <>
           <div style={{"position" : "absolute", top:"0px", left:"0px" }}>
           <img src={"top bar/base.png"}  style={{position:"absolute", "top" : "0px", "left":"0px"}}/>
           
@@ -156,7 +218,8 @@ function App({state} :{state :  game_state_interface}) {
                   setDisplay("warn");
                   setWarning(next);
                 } else { 
-                  setDoneQuests(next);
+                  setDoneQuests(next.contracts);
+                  setEvents(next.events);
                 }
                 forceUpdate()}} />
               </>
@@ -166,6 +229,16 @@ function App({state} :{state :  game_state_interface}) {
               var quest = doneQuests[0];
               return <><img src={"quests/" + quest + ".png"}/></>
           }
+          if(display === "events"){
+            var event = events[0];
+            if(event === undefined){
+              return "";
+            }
+            return <><img src={"backgrounds/event.png"}/> 
+            <span style={{"position": "absolute", "left":290, "top":268,"color":"white"}}>{event}</span>
+            <img src="top bar/next.png" style={{"position": "absolute", "left":590, "top":408}} onClick={() => { setEvents(events.slice(0, events.length-1))  }}></img>
+            </>
+        }
           if(display === "hunter"){
             return <>
             <img src={"backgrounds/hunt.png"}  style={{position:"absolute", "top" : "0px", "left":"0px", "zIndex" : -1}}/>

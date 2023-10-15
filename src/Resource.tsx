@@ -1,6 +1,6 @@
 import { useReducer } from "react";
-import { game_state_interface, main_contract, main_contract_type, resource_type, resources } from "./State";
-import { main_contracts, quest_length } from "./contract_info";
+import { game_state_interface, main_contracts, main_contract_type, resource_type, resources } from "./State";
+import { quest_length } from "./contract_info";
 
 function add(state : game_state_interface, resource :  resource_type | main_contract_type, index : number){
     if(resource_or_quest(resource) === "resource"){

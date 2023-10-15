@@ -1,7 +1,7 @@
 import { contract, game_state_interface , resource_type} from "./State";
 import { contract_dag, contract_costs } from "./contract_info";
 
-let contract_hints : {[key in contract] : string}  = {
+let contract_hints : Partial<{[key in contract] : string}>  = {
     "make some food": "The king wants us to make some food",
     "explore land in the north": "We should explore the area around our kingdom.",
     "clear out copper mine": "The abandoned copper mine is filled with monsters. Let's get rid of them.",
@@ -27,7 +27,7 @@ let contract_hints : {[key in contract] : string}  = {
     "explore mapped region": "One of the magical creatures that invaded us had a map on them. The labels \"Dragon den\" and \"Phoenix nest\" are on it. Let's explore those areas.",
     "research dragonhide crafting": "If we learn to work with dragonhide, we can make armor with it.",
     "research dragon anatomy": "We need to know where the dragon's weaknesses are.",
-    "kill dragon": "Let's get rid of this dragon once and for all."
+    "kill dragon" : "Let's kill this dragon once and for all."
 }
 
 
@@ -39,6 +39,12 @@ function contract_string(state : game_state_interface) : string{
             continue;
         }
         let hint = contract_hints[item];
+
+        // don't hint for contracts that don't have strings
+        if(hint === undefined){
+            continue
+        }
+
         hint += "\nThis will require " 
         let cost = contract_costs[item];
         

@@ -1,9 +1,9 @@
 import { MouseEvent, ReactElement, useState } from 'react';
-import { game_state_interface ,resources, resource_type, contract, main_contract_type} from './State';
+import { game_state_interface ,resources, resource_type, contract, main_contract_type, main_contracts} from './State';
 import dag from './dag';
 import _ from 'lodash';
 import React from 'react';
-import { contract_costs, main_contracts } from './contract_info';
+import { contract_costs } from './contract_info';
 
 function sign_contract(state : game_state_interface, contract : contract) : void {
     // non-main contracts are autocompleted
