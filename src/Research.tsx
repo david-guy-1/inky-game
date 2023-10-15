@@ -8,7 +8,7 @@ function Research({state, update} :{state :  game_state_interface, update: Funct
         Costs {state['worker wages'][2]} per worker <br />
         {function(){
             var lst : ReactElement[] = [];
-            for(let item of main_contracts){
+            for(let item of main_contracts){ // you can only work on main contracts
                 if(state.contracts[item] !== "in progress"){
                     continue;
                 }

@@ -6,7 +6,7 @@ import React from 'react';
 import { contract_costs, main_contracts } from './contract_info';
 
 function sign_contract(state : game_state_interface, contract : contract) : void {
-    // side contract
+    // non-main contracts are autocompleted
     if(main_contracts.indexOf(contract as main_contract_type) === -1){
         state.contracts[contract] = "autocomplete";
     } else {

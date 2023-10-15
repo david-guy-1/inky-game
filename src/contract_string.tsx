@@ -34,10 +34,6 @@ let contract_hints : {[key in contract] : string}  = {
 function contract_string(state : game_state_interface) : string{ 
     let exposed = contract_dag.get_exposed_vertices(new Set((Object.keys(state.contracts) as contract[]).filter((x) => state.contracts[x] !== "not signed") ));
     for(let item of exposed){
-        // don't hint for main contracts
-        if(main_contracts.indexOf(item as main_contract_type) === -1){
-            continue; 
-        }
         let hint = contract_hints[item];
         hint += "\nThis will require " 
         let cost = contract_costs[item];

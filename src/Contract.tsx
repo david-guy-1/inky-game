@@ -1,9 +1,7 @@
-import { MouseEvent, ReactElement } from 'react';
-import { game_state_interface ,resources, resource_type, contract} from './State';
-import dag from './dag';
+import { ReactElement } from 'react';
+import { game_state_interface ,resources, contract} from './State';
 import _ from 'lodash';
-import { contract_dag, contracts, preambles, postambles, main_contracts, contract_costs, contract_conditions } from './contract_info';
-import React from 'react';
+import { contract_dag, preambles, postambles, contract_costs, contract_conditions } from './contract_info';
 let names = ["Hunting Lodge", "Blacksmithing Guild", "Center of Research and Exploration"]
 
 function check_costs(state : game_state_interface, contract : contract) : boolean {
@@ -21,7 +19,7 @@ function check_costs(state : game_state_interface, contract : contract) : boolea
 }
 function get_valid_contracts(state : game_state_interface) : contract[]{
     let out : contract[] = [];
-    let already_signed : contract[] = (Object.keys(state.contracts) as contract[]).filter((x) => state.contracts[x] !== "not signed" );
+    let already_signed : contract[] = (Object.keys(state.contracts) as contract[]).filter((x) => state.contracts[x] === "complete" );
     let candidates : Set<contract> = contract_dag.get_exposed_vertices(new Set(already_signed));
     for(let contract  of candidates){
         // check already signed

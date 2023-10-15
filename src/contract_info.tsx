@@ -30,11 +30,7 @@ for(var i=0; i < main_contracts.length-1; i++){
     }
     edges.push([predecessor, main_contracts[i+1]]); 
 }
-/*
-let main_contracts : main_contract_type[] = ["","clear out copper mine",  "explore land in the south", "clear out iron mine","explore land in the east", "clear out coal mine", "explore land in the west", "research steelmaking", "research steel fletching","explore magma cave", "research elemental enchantments","explore ice cave","research holy enchantment", "open a portal to the land of the dead", "make deal with fairies", "research advanced enchantment techniques", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon"]
 
-let contracts : contract[] =["", "make deal with angels", "make deal with witches"]
-*/
 
 edges.push(["make some food", "explore land in the north"]);
 
@@ -187,7 +183,7 @@ let resource_requirements : Record<resource_type, contract[]> = {
 }
 
 // update dag
-for(var item of main_contracts){
+for(var item of contracts){
     var costs = contract_costs[item].resources;
     for(var res of Object.keys(costs)){
         var prereqs = resource_requirements[res as resource_type] 

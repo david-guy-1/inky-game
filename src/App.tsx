@@ -10,7 +10,7 @@ import Contract from './Contract';
 import ContractSigning from './ContractSigning';
 import React from 'react';
 import contract_string from './contract_string';
-import { main_contracts, postambles, quest_length } from './contract_info';
+import { contracts, main_contracts, postambles, quest_length } from './contract_info';
 
 type location = "hunter" | "smith" | "explorer"  |"total" | "contract" | "signing" | "donequests"
 // mutates state
@@ -25,7 +25,7 @@ function compute_wages(state : game_state_interface) : [[number, number, number]
   }
   return [workers, costs];
 }
-function nextDay(state : game_state_interface) : main_contract_type[]{
+function nextDay(state : game_state_interface) : contract[]{
   // generate parts
   for(var item of resources){
       state.resources[item] += state['worker allocation']["building"][item];
@@ -38,18 +38,21 @@ function nextDay(state : game_state_interface) : main_contract_type[]{
   }
   state.money += state['research grant'];
   // quest progress
-  var done : main_contract_type[] = [];
-  for(var cont of main_contracts){
+  var done : contract[] = [];
+  for(var cont of contracts){
     if(state.contracts[cont] === "autocomplete" ){
       state.contracts[cont] = 'complete';
       done.push(cont);
     }
-    state['quest progress'][cont] += state['worker allocation'].main_contract[cont];
-    if(state['quest progress'][cont] >= quest_length[cont] && state.contracts[cont] === "in progress" ){
-      state.workers[2] -= state['worker allocation'].main_contract[cont];
-      state['worker allocation'].main_contract[cont] = 0;
-      done.push(cont)
-      state.contracts[cont] = "complete"
+    // if contract is a main contract, progress it
+    if(main_contracts.indexOf(cont as main_contract_type) !== -1){
+      state['quest progress'][cont] += state['worker allocation'].main_contract[cont as main_contract_type];
+      if(state['quest progress'][cont] >= quest_length[cont] && state.contracts[cont] === "in progress" ){
+        state.workers[2] -= state['worker allocation'].main_contract[cont as main_contract_type];
+        state['worker allocation'].main_contract[cont as main_contract_type] = 0;
+        done.push(cont)
+        state.contracts[cont] = "complete"
+      }
     }
   }
 
