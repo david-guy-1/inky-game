@@ -1,9 +1,9 @@
 type resource_type = "food"|"wood"|"magic feathers"|"fire spirits"|"ice crystals"|"orbs of darkness"|"phoenix eggs"|"fairy dust"|"dragon skin"|"copper swords"|"iron swords"|"steel swords"|"steel arrowheads"|"ice swords"|"fire swords"|"holy swords"|"frost bows"|"arcane robes"|"omni-enchanted swords"|"dragonhide armor";
-type researching_type = "explore land in the north"|"clear out copper mine"|"explore land in the south"|"clear out iron mine"|"explore land in the east"|"clear out coal mine"|"explore land in the west"|"research steelmaking"|"research fletching"|"explore magma cave"|"research elemental enchantments"|"explore ice cave"|"research holy enchantment"|"open a portal to the land of the dead"|"research fairy manipulation"|"research advanced enchantment techniques"|"explore mapped region"|"research dragonhide crafting"|"research dragon anatomy"|"kill dragon";
-type contract = "explore land in the north"|"clear out copper mine"|"explore land in the south"|"clear out iron mine"|"explore land in the east"|"clear out coal mine"|"explore land in the west"|"research steelmaking"|"research fletching"|"explore magma cave"|"research elemental enchantments"|"explore ice cave"|"research holy enchantment"|"open a portal to the land of the dead"|"research fairy manipulation"|"research advanced enchantment techniques"|"explore mapped region"|"research dragonhide crafting"|"research dragon anatomy"|"kill dragon"|"grow kingdom"|"make deal with witches"|"make deal with angels"|"deal with famine"|"fend off invaders"|"fend off magic invaders";
-type contract_state = "not signed"|"in progress"|"complete";
+type main_contract_type = "explore land in the north"|"clear out copper mine"|"explore land in the south"|"clear out iron mine"|"explore land in the east"|"clear out coal mine"|"explore land in the west"|"research steelmaking"|"research steel fletching"|"explore magma cave"|"research elemental enchantments"|"explore ice cave"|"research holy enchantment"|"open a portal to the land of the dead"|"make deal with fairies"|"research advanced enchantment techniques"|"explore mapped region"|"research dragonhide crafting"|"research dragon anatomy"|"kill dragon"|"grow kingdom";
+type contract = "explore land in the north"|"clear out copper mine"|"explore land in the south"|"clear out iron mine"|"explore land in the east"|"clear out coal mine"|"explore land in the west"|"research steelmaking"|"research steel fletching"|"explore magma cave"|"research elemental enchantments"|"explore ice cave"|"research holy enchantment"|"open a portal to the land of the dead"|"make deal with fairies"|"research advanced enchantment techniques"|"explore mapped region"|"research dragonhide crafting"|"research dragon anatomy"|"kill dragon"|"grow kingdom"|"make deal with witches"|"make deal with angels"|"make some food"|"fend off invaders"|"fend off magic invaders";
+type contract_state = "not signed"|"in progress"|"autocomplete"|"complete";
 var resources : resource_type[]= ["food", "wood", "magic feathers", "fire spirits", "ice crystals", "orbs of darkness", "phoenix eggs", "fairy dust", "dragon skin", "copper swords", "iron swords", "steel swords", "steel arrowheads", "ice swords", "fire swords", "holy swords", "frost bows", "arcane robes", "omni-enchanted swords", "dragonhide armor"];
-var researching : researching_type[] = ["explore land in the north", "clear out copper mine", "explore land in the south", "clear out iron mine", "explore land in the east", "clear out coal mine", "explore land in the west", "research steelmaking", "research fletching", "explore magma cave", "research elemental enchantments", "explore ice cave", "research holy enchantment", "open a portal to the land of the dead", "research fairy manipulation", "research advanced enchantment techniques", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon"]
+var main_contract : main_contract_type[] = ["explore land in the north", "clear out copper mine", "explore land in the south", "clear out iron mine", "explore land in the east", "clear out coal mine", "explore land in the west", "research steelmaking", "research steel fletching", "explore magma cave", "research elemental enchantments", "explore ice cave", "research holy enchantment", "open a portal to the land of the dead", "make deal with fairies", "research advanced enchantment techniques", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon", "grow kingdom"]
 
 
 interface game_state_interface {
@@ -35,7 +35,7 @@ interface game_state_interface {
  "omni-enchanted swords" : number,
  "dragonhide armor" : number,
 },
-"researching" : {
+"main_contract" : {
  "explore land in the north": number,
  "clear out copper mine": number,
  "explore land in the south": number,
@@ -44,18 +44,19 @@ interface game_state_interface {
  "clear out coal mine": number,
  "explore land in the west": number,
  "research steelmaking": number,
- "research fletching": number,
+ "research steel fletching": number,
  "explore magma cave": number,
  "research elemental enchantments": number,
  "explore ice cave": number,
  "research holy enchantment": number,
  "open a portal to the land of the dead": number,
- "research fairy manipulation": number,
+ "make deal with fairies": number,
  "research advanced enchantment techniques": number,
  "explore mapped region": number,
  "research dragonhide crafting": number,
  "research dragon anatomy": number,
  "kill dragon": number,
+ "grow kingdom": number,
 }
   },
   "resources" : {
@@ -79,52 +80,8 @@ interface game_state_interface {
  "arcane robes" :  number,
  "omni-enchanted swords" :  number,
  "dragonhide armor" :  number,
-  },
-  "tech tree" : {
- "explore land in the north" :number,
- "clear out copper mine" :number,
- "explore land in the south" :number,
- "clear out iron mine" :number,
- "explore land in the east" :number,
- "clear out coal mine" :number,
- "explore land in the west" :number,
- "research steelmaking" :number,
- "research fletching" :number,
- "explore magma cave" :number,
- "research elemental enchantments" :number,
- "explore ice cave" :number,
- "research holy enchantment" :number,
- "open a portal to the land of the dead" :number,
- "research fairy manipulation" :number,
- "research advanced enchantment techniques" :number,
- "explore mapped region" :number,
- "research dragonhide crafting" :number,
- "research dragon anatomy" :number,
- "kill dragon" :number,
- 
-}, "tech tree completion": {
- "explore land in the north" : boolean,
- "clear out copper mine" : boolean,
- "explore land in the south" : boolean,
- "clear out iron mine" : boolean,
- "explore land in the east" : boolean,
- "clear out coal mine" : boolean,
- "explore land in the west" : boolean,
- "research steelmaking" : boolean,
- "research fletching" : boolean,
- "explore magma cave" : boolean,
- "research elemental enchantments" : boolean,
- "explore ice cave" : boolean,
- "research holy enchantment" : boolean,
- "open a portal to the land of the dead" : boolean,
- "research fairy manipulation" : boolean,
- "research advanced enchantment techniques" : boolean,
- "explore mapped region" : boolean,
- "research dragonhide crafting" : boolean,
- "research dragon anatomy" : boolean,
- "kill dragon" : boolean,
  },
-contracts :{ "explore land in the north" : contract_state,"clear out copper mine" : contract_state,"explore land in the south" : contract_state,"clear out iron mine" : contract_state,"explore land in the east" : contract_state,"clear out coal mine" : contract_state,"explore land in the west" : contract_state,"research steelmaking" : contract_state,"research fletching" : contract_state,"explore magma cave" : contract_state,"research elemental enchantments" : contract_state,"explore ice cave" : contract_state,"research holy enchantment" : contract_state,"open a portal to the land of the dead" : contract_state,"research fairy manipulation" : contract_state,"research advanced enchantment techniques" : contract_state,"explore mapped region" : contract_state,"research dragonhide crafting" : contract_state,"research dragon anatomy" : contract_state,"kill dragon" : contract_state,"grow kingdom" : contract_state,"make deal with witches" : contract_state,"make deal with angels" : contract_state,"deal with famine" : contract_state,"fend off invaders" : contract_state,"fend off magic invaders" : contract_state,} 
+contracts :{ "explore land in the north" : contract_state,"clear out copper mine" : contract_state,"explore land in the south" : contract_state,"clear out iron mine" : contract_state,"explore land in the east" : contract_state,"clear out coal mine" : contract_state,"explore land in the west" : contract_state,"research steelmaking" : contract_state,"research steel fletching" : contract_state,"explore magma cave" : contract_state,"research elemental enchantments" : contract_state,"explore ice cave" : contract_state,"research holy enchantment" : contract_state,"open a portal to the land of the dead" : contract_state,"make deal with fairies" : contract_state,"research advanced enchantment techniques" : contract_state,"explore mapped region" : contract_state,"research dragonhide crafting" : contract_state,"research dragon anatomy" : contract_state,"kill dragon" : contract_state,"grow kingdom" : contract_state,"make deal with witches" : contract_state,"make deal with angels" : contract_state,"make some food" : contract_state,"fend off invaders" : contract_state,"fend off magic invaders" : contract_state,}, "quest progress" :{ "explore land in the north" : number,"clear out copper mine" : number,"explore land in the south" : number,"clear out iron mine" : number,"explore land in the east" : number,"clear out coal mine" : number,"explore land in the west" : number,"research steelmaking" : number,"research steel fletching" : number,"explore magma cave" : number,"research elemental enchantments" : number,"explore ice cave" : number,"research holy enchantment" : number,"open a portal to the land of the dead" : number,"make deal with fairies" : number,"research advanced enchantment techniques" : number,"explore mapped region" : number,"research dragonhide crafting" : number,"research dragon anatomy" : number,"kill dragon" : number,"grow kingdom" : number,"make deal with witches" : number,"make deal with angels" : number,"make some food" : number,"fend off invaders" : number,"fend off magic invaders" : number,} 
 }
 
 var game_state_initial : game_state_interface =  {
@@ -156,7 +113,7 @@ var game_state_initial : game_state_interface =  {
  "omni-enchanted swords" : 0,
  "dragonhide armor" : 0,
 },
-"researching" : {
+"main_contract" : {
  "explore land in the north": 0,
  "clear out copper mine": 0,
  "explore land in the south": 0,
@@ -165,18 +122,19 @@ var game_state_initial : game_state_interface =  {
  "clear out coal mine": 0,
  "explore land in the west": 0,
  "research steelmaking": 0,
- "research fletching": 0,
+ "research steel fletching": 0,
  "explore magma cave": 0,
  "research elemental enchantments": 0,
  "explore ice cave": 0,
  "research holy enchantment": 0,
  "open a portal to the land of the dead": 0,
- "research fairy manipulation": 0,
+ "make deal with fairies": 0,
  "research advanced enchantment techniques": 0,
  "explore mapped region": 0,
  "research dragonhide crafting": 0,
  "research dragon anatomy": 0,
  "kill dragon": 0,
+ "grow kingdom": 0,
 }
   },
   "resources" : {
@@ -200,54 +158,11 @@ var game_state_initial : game_state_interface =  {
  "arcane robes" :  0,
  "omni-enchanted swords" :  0,
  "dragonhide armor" :  0,
-  },
-  "tech tree" : {
- "explore land in the north" :0,
- "clear out copper mine" :0,
- "explore land in the south" :0,
- "clear out iron mine" :0,
- "explore land in the east" :0,
- "clear out coal mine" :0,
- "explore land in the west" :0,
- "research steelmaking" :0,
- "research fletching" :0,
- "explore magma cave" :0,
- "research elemental enchantments" :0,
- "explore ice cave" :0,
- "research holy enchantment" :0,
- "open a portal to the land of the dead" :0,
- "research fairy manipulation" :0,
- "research advanced enchantment techniques" :0,
- "explore mapped region" :0,
- "research dragonhide crafting" :0,
- "research dragon anatomy" :0,
- "kill dragon" :0,
- 
-}, "tech tree completion": {
- "explore land in the north" : false,
- "clear out copper mine" : false,
- "explore land in the south" : false,
- "clear out iron mine" : false,
- "explore land in the east" : false,
- "clear out coal mine" : false,
- "explore land in the west" : false,
- "research steelmaking" : false,
- "research fletching" : false,
- "explore magma cave" : false,
- "research elemental enchantments" : false,
- "explore ice cave" : false,
- "research holy enchantment" : false,
- "open a portal to the land of the dead" : false,
- "research fairy manipulation" : false,
- "research advanced enchantment techniques" : false,
- "explore mapped region" : false,
- "research dragonhide crafting" : false,
- "research dragon anatomy" : false,
- "kill dragon" : false,
  },
-contracts :{ "explore land in the north" : "not signed","clear out copper mine" : "not signed","explore land in the south" : "not signed","clear out iron mine" : "not signed","explore land in the east" : "not signed","clear out coal mine" : "not signed","explore land in the west" : "not signed","research steelmaking" : "not signed","research fletching" : "not signed","explore magma cave" : "not signed","research elemental enchantments" : "not signed","explore ice cave" : "not signed","research holy enchantment" : "not signed","open a portal to the land of the dead" : "not signed","research fairy manipulation" : "not signed","research advanced enchantment techniques" : "not signed","explore mapped region" : "not signed","research dragonhide crafting" : "not signed","research dragon anatomy" : "not signed","kill dragon" : "not signed","grow kingdom" : "not signed","make deal with witches" : "not signed","make deal with angels" : "not signed","deal with famine" : "not signed","fend off invaders" : "not signed","fend off magic invaders" : "not signed",} 
+contracts :{ "explore land in the north" : "not signed","clear out copper mine" : "not signed","explore land in the south" : "not signed","clear out iron mine" : "not signed","explore land in the east" : "not signed","clear out coal mine" : "not signed","explore land in the west" : "not signed","research steelmaking" : "not signed","research steel fletching" : "not signed","explore magma cave" : "not signed","research elemental enchantments" : "not signed","explore ice cave" : "not signed","research holy enchantment" : "not signed","open a portal to the land of the dead" : "not signed","make deal with fairies" : "not signed","research advanced enchantment techniques" : "not signed","explore mapped region" : "not signed","research dragonhide crafting" : "not signed","research dragon anatomy" : "not signed","kill dragon" : "not signed","grow kingdom" : "not signed","make deal with witches" : "not signed","make deal with angels" : "not signed","make some food" : "not signed","fend off invaders" : "not signed","fend off magic invaders" : "not signed",}, "quest progress" :{ "explore land in the north" : 0,"clear out copper mine" : 0,"explore land in the south" : 0,"clear out iron mine" : 0,"explore land in the east" : 0,"clear out coal mine" : 0,"explore land in the west" : 0,"research steelmaking" : 0,"research steel fletching" : 0,"explore magma cave" : 0,"research elemental enchantments" : 0,"explore ice cave" : 0,"research holy enchantment" : 0,"open a portal to the land of the dead" : 0,"make deal with fairies" : 0,"research advanced enchantment techniques" : 0,"explore mapped region" : 0,"research dragonhide crafting" : 0,"research dragon anatomy" : 0,"kill dragon" : 0,"grow kingdom" : 0,"make deal with witches" : 0,"make deal with angels" : 0,"make some food" : 0,"fend off invaders" : 0,"fend off magic invaders" : 0,} 
 }
 
-game_state_initial.money =1000;
+game_state_initial.money =1000000;
+game_state_initial["research grant"] =1000000;
 game_state_initial['worker wages'] = [1000, 1100, 1200];
- export {game_state_initial, type contract, type game_state_interface, resources, researching,  type resource_type, type researching_type };
+ export {game_state_initial, type contract, type game_state_interface, resources, main_contract,  type resource_type, type main_contract_type };

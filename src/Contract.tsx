@@ -1,8 +1,8 @@
 import { MouseEvent, ReactElement } from 'react';
-import { game_state_interface ,resources, researching, resource_type, contract} from './State';
+import { game_state_interface ,resources, resource_type, contract} from './State';
 import dag from './dag';
 import _ from 'lodash';
-import { contract_dag, contracts, preambles, postambles, main_contracts, contract_costs } from './contract_info';
+import { contract_dag, contracts, preambles, postambles, main_contracts, contract_costs, contract_conditions } from './contract_info';
 import React from 'react';
 let names = ["Hunting Lodge", "Blacksmithing Guild", "Center of Research and Exploration"]
 
@@ -33,7 +33,7 @@ function get_valid_contracts(state : game_state_interface) : contract[]{
             continue;
         }
         // check functional prerequisite
-        if(contracts[contract](state) === false){
+        if(contract_conditions[contract](state) === false){
             continue;
         }
         out.push(contract);

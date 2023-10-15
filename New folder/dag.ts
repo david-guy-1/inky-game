@@ -52,12 +52,12 @@ class dag<T extends string | number >{
 		return Array.from(this.vertices).map((x) => x.name);
 	}
 	//strings
-	add_edge(v1 : T, v2  : T) : void{
+	add_edge(v1 : T, v2  : T, check_redundant : boolean = true) : void{
 		if(this.has_edge(v1, v2) || v1 == v2){
 			return;
 		}
 		// no redundant edges
-		if(Array.from(this.get_vertex_by_name(v1).succ).map((x) => x.name).indexOf(v2) != -1){
+		if(check_redundant && Array.from(this.get_vertex_by_name(v1).succ).map((x) => x.name).indexOf(v2) != -1){
 			return;
 		}
 		var v1obj = this.get_vertex_by_name(v1);

@@ -1,5 +1,5 @@
 import { MouseEvent, ReactElement } from 'react';
-import { game_state_interface ,resources, researching, resource_type} from './State';
+import { game_state_interface ,resources, main_contract, resource_type} from './State';
 import React from 'react';
 let names = ["Hunting Lodge", "Blacksmithing Guild", "Center of Research and Exploration"]
 
