@@ -41,17 +41,22 @@ function get_valid_contracts(state : game_state_interface) : contract[]{
 
 function Contract({state, update, goSign} :{state :  game_state_interface, update: Function , goSign : Function}) {
     let valid_contracts = get_valid_contracts(state)
-    return  <> Sign Contracts <br /> 
+    return  <> 
+    <div style={{"position":"absolute", "top" : 102, "left" : 156, "fontSize" : 20, "fontFamily":"Arial", "width": 500}}>
        {function(){
             var out : ReactElement[] = [];
             for(let contract_ of valid_contracts){
-                out.push(<>{contract_} <button name={contract_} onClick={function(e){
-                    var contract_name = e.currentTarget.getAttribute("name") as contract;
+                out.push(<>{contract_} <span data-name={contract_} onClick={function(e){
+                    var contract_name = e.currentTarget.getAttribute("data-name") as contract;
                     goSign(contract_name + "|" + preambles[contract_name] + "|" + postambles[contract_name]); 
-                }}>Sign contract</button><br /></>)
+                }} style={{"position":"absolute", "right": 0, "backgroundColor":"green","padding":10}}>Sign contract</span><br /><br /></>)
+            }
+            if(out.length === 0){
+                return [<>There are no contracts available</>]
             }
             return out;
        }()}
+       </div>
     </> 
 }
 export default Contract; 

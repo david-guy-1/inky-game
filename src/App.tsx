@@ -98,12 +98,12 @@ function App({state} :{state :  game_state_interface}) {
             return (
               <> 
               <img src={"backgrounds/base.png"}  style={{position:"absolute", "top" : "0px", "left":"0px", "zIndex" : -1}}/>
-              <div style={{"position" : "absolute", "top" : "80px", "left":"150px"}}>
+              <div style={{"position" : "absolute", "top" : "50px", "left":"150px", "width":"538px"}}>
               {contract_string(state)}
               </div>
 
 
-              <div style={{"position" : "absolute", "top" : "104px", "left":"134px", "width":"558px"}}>
+              <div style={{"position" : "absolute", "top" : "124px", "left":"134px", "width":"558px"}}>
                 {/* 134-692, 129-500 , w558, h371*/}
                 <div style={{"position" : "absolute", "top" : "0px", "left":"0px"}}>
                 {state.money} gold ({state['research grant']}/day)
@@ -125,12 +125,12 @@ function App({state} :{state :  game_state_interface}) {
                     for(let item of resources){
                         i+=1;
                         lst.push(<>
-                          <div style={{"position" : "absolute", top: 19*i+25 + "px"}}>
+                          <div style={{"position" : "absolute", top: 18*i+25 + "px"}}>
                             <span style={{"position" : "absolute", left  : "0px", width:"190px"}}>{item}</span>
                             <span style={{"position" : "absolute", left  : "250px"}}>{state.resources[item]} </span>
                             <span style={{"position" : "absolute", left  : "350px"}}>{state['selling prices'][item]} </span>
                             
-                            <span style={{"position" : "absolute", left  : "450px"}}>{state.resources[item]> 0 ?   <img src="backgrounds/sell.png" key={item}  onClick={() => {state.resources[item]-=1; state.money += state['selling prices'][item] ;forceUpdate() ; }} />: null} 
+                            <span style={{"position" : "absolute", left  : "450px"}}>{state.resources[item]> 0 ?   <img src="icons/sell.png" key={item}  onClick={() => {state.resources[item]-=1; state.money += state['selling prices'][item] ;forceUpdate() ; }} />: null} 
                             </span>
                             </div> 
                         </>)
@@ -138,7 +138,7 @@ function App({state} :{state :  game_state_interface}) {
                     return lst; 
                 }()}
               </div>
-              <img src="backgrounds/next day.png" style={{"position" : "absolute", left  : "285px", top:"526px"}} onClick={() => {setDoneQuests(nextDay(state)); forceUpdate()}} />
+              <img src="icons/next day.png" style={{"position" : "absolute", left  : "285px", top:"526px"}} onClick={() => {setDoneQuests(nextDay(state)); forceUpdate()}} />
               </>
             )
           }
@@ -147,21 +147,26 @@ function App({state} :{state :  game_state_interface}) {
               return <><img src={"quests/" + quest + ".png"}/></>
           }
           if(display === "hunter"){
-            return <ProducingCompany state={state} update={forceUpdate} index={0} tag={"Hunting Lodge"} allowed_stuff={["food", "wood", "magic feathers", "fire spirits", "ice crystals", "orbs of darkness", "phoenix eggs", "fairy dust", "dragon skin"]}/>
+            return <>
+            <img src={"backgrounds/hunt.png"}  style={{position:"absolute", "top" : "0px", "left":"0px", "zIndex" : -1}}/>
+            <ProducingCompany state={state} update={forceUpdate} index={0} tag={"Hunting Lodge"} allowed_stuff={["food", "wood", "magic feathers", "fire spirits", "ice crystals", "orbs of darkness", "phoenix eggs", "fairy dust", "dragon skin"]}/></>
           }
           if(display === "smith"){
-            return <ProducingCompany state={state}  update={forceUpdate}  index={1} tag={"Blacksmithing Guild"} allowed_stuff={["copper swords", "iron swords", "steel swords", "steel arrowheads", "ice swords", "fire swords", "holy swords", "frost bows", "arcane robes", "omni-enchanted swords", "dragonhide armor"]}/>
+            return  <>
+            <img src={"backgrounds/smith.png"}  style={{position:"absolute", "top" : "0px", "left":"0px", "zIndex" : -1}}/><ProducingCompany state={state}  update={forceUpdate}  index={1} tag={"Blacksmithing Guild"} allowed_stuff={["copper swords", "iron swords", "steel swords", "steel arrowheads", "ice swords", "fire swords", "holy swords", "frost bows", "arcane robes", "omni-enchanted swords", "dragonhide armor"]}/></>
           }
           if(display === "explorer"){
-            return <Research state={state}  update={forceUpdate}/>
+            return  <>
+            <img src={"backgrounds/research.png"}  style={{position:"absolute", "top" : "0px", "left":"0px", "zIndex" : -1}}/><Research state={state}  update={forceUpdate}/></>
           }
           if(display === "contract"){
-            return <Contract state={state}  update={forceUpdate} goSign={(s : string) => {goSign(s); setDisplay("signing") } }/>
+            return  <><img src={"backgrounds/contract list.png"}  style={{position:"absolute", "top" : "0px", "left":"0px", "zIndex" : -1}}/><Contract state={state}  update={forceUpdate} goSign={(s : string) => {goSign(s); setDisplay("signing") } }/></>
           }
           if(display === "signing"){
             var contract : contract = contractData.split("|")[0] as contract
             var preamble = contractData.split("|")[1]
-            return <ContractSigning state={state} update={setDisplay} preamble={preamble}  contract={contract}/>
+            return <>
+            <img src={"backgrounds/contract.png"}  style={{position:"absolute", "top" : "0px", "left":"0px", "zIndex" : -1}}/><ContractSigning state={state} update={setDisplay} preamble={preamble}  contract={contract}/></>
           }
         }()}
         </div>
