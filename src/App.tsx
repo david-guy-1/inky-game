@@ -26,6 +26,7 @@ function compute_wages(state : game_state_interface) : [[number, number, number]
   return [workers, costs];
 }
 function nextDay(state : game_state_interface) : contract[]{
+  state.day += 1;
   // generate parts
   for(var item of resources){
       state.resources[item] += state['worker allocation']["building"][item];
@@ -73,45 +74,76 @@ function App({state} :{state :  game_state_interface}) {
   return (
     <>    
         {display ===  "signing" || display === "donequests" ? null : <>
-          <button onClick={() => {setDisplay("total");}}>Return</button>   <br />     
-          <button onClick={() => {setDisplay("hunter");}}>Hunting Lodge </button>({wages[0][0]} workers, cost {wages[1][0]}/day) <br />
-          <button onClick={() => {setDisplay("smith");}}>Blacksmithing Guild </button>({wages[0][1]} workers, cost {wages[1][1]}/day)  <br />
-          <button onClick={() => {setDisplay("explorer");}}>Center of Research and Exploration</button> ({wages[0][2]} workers, cost {wages[1][2]}/day) <br />
-          <button onClick={() => {setDisplay("contract");}}>Sign contracts</button> <br />
-          <br />
+          <div style={{"position" : "absolute", top:"0px", left:"0px" }}>
+          <img src={"top bar/base.png"}  style={{position:"absolute", "top" : "0px", "left":"0px"}}/>
+          
+          <img src={"top bar/back.png"}  style={{position:"absolute", "top" : "0px", "left":"0px"}} onClick={() => {setDisplay("total");}}/>
+          <img src={"top bar/blacksmithing.png"}  style={{position:"absolute", "top" : "0px", "left":"100px"}} onClick={() => {setDisplay("smith");}}/>
+          
+          <img src={"top bar/hunt.png"}  style={{position:"absolute", "top" : "0px", "left":"200px"}} onClick={() => {setDisplay("hunter");}} />
+          <img src={"top bar/research.png"}  style={{position:"absolute", "top" : "0px", "left":"300px"}}  onClick={() => {setDisplay("explorer");}}/>
+          <img src={"top bar/contract.png"}  style={{position:"absolute", "top" : "0px", "left":"400px"}} onClick={() => {setDisplay("contract");}}/>
+          </div>
         </>}
+        <div style={{"position" : "absolute", top:"80px", left:"0px", "width":"800px" }}>
         {function(){
           if(display === "total"){ 
             return (
               <> 
+              <img src={"backgrounds/base.png"}  style={{position:"absolute", "top" : "0px", "left":"0px", "zIndex" : -1}}/>
+              <div style={{"position" : "absolute", "top" : "80px", "left":"150px"}}>
               {contract_string(state)}
-              Current game state is  :  {JSON.stringify(state)}
-              <br />
-              Sell items
-              <br/>
-              {function(){
-                  var lst: ReactElement[]  = [];
-                  for(let item of resources){
-                      lst.push(<> 
-                          {item} : You have {state.resources[item]}, selling price is {state['selling prices'][item]}, {state.resources[item]> 0 ?   <button key={item}  onClick={() => {state.resources[item]-=1; state.money += state['selling prices'][item] ;forceUpdate() ; }}>Sell</button>: null} <br />
-                      </>)
-                  }
-                  return lst; 
-              }()}
-        
-              <button onClick={() => {setDoneQuests(nextDay(state)); forceUpdate()}}>Next Day</button>
+              </div>
+
+
+              <div style={{"position" : "absolute", "top" : "104px", "left":"134px", "width":"558px"}}>
+                {/* 134-692, 129-500 , w558, h371*/}
+                <div style={{"position" : "absolute", "top" : "0px", "left":"0px"}}>
+                {state.money} gold ({state['research grant']}/day)
+                </div>
+                <div style={{"position" : "absolute", "top" : "0px", "left":"250px"}}>
+                You have
+                </div>
+
+                <div style={{"position" : "absolute", "top" : "0px", "left":"350px"}}>
+                Sell price
+                </div>
+
+                <div style={{"position" : "absolute", "top" : "0px", "left":"450px"}}>
+                Day {state.day}
+                </div>
+                {function(){
+                    var lst: ReactElement[]  = [];
+                    var i = -1;
+                    for(let item of resources){
+                        i+=1;
+                        lst.push(<>
+                          <div style={{"position" : "absolute", top: 19*i+25 + "px"}}>
+                            <span style={{"position" : "absolute", left  : "0px", width:"190px"}}>{item}</span>
+                            <span style={{"position" : "absolute", left  : "250px"}}>{state.resources[item]} </span>
+                            <span style={{"position" : "absolute", left  : "350px"}}>{state['selling prices'][item]} </span>
+                            
+                            <span style={{"position" : "absolute", left  : "450px"}}>{state.resources[item]> 0 ?   <img src="backgrounds/sell.png" key={item}  onClick={() => {state.resources[item]-=1; state.money += state['selling prices'][item] ;forceUpdate() ; }} />: null} 
+                            </span>
+                            </div> 
+                        </>)
+                    }
+                    return lst; 
+                }()}
+              </div>
+              <img src="backgrounds/next day.png" style={{"position" : "absolute", left  : "285px", top:"526px"}} onClick={() => {setDoneQuests(nextDay(state)); forceUpdate()}} />
               </>
             )
           }
           if(display === "donequests"){
               var quest = doneQuests[0];
-              return <><img src={"quests/" + quest + ".png"} style={{"position":"absolute"}}/><div style={{"backgroundColor" : "white"}}>Task completed :  {quest}<br /> {postambles[quest]} <button onClick={() => { setDoneQuests(doneQuests.slice(0, doneQuests.length-1)) } }> Next</button></div></>
+              return <><img src={"quests/" + quest + ".png"}/><div>Task completed :  {quest}<br /> {postambles[quest]} <button onClick={() => { setDoneQuests(doneQuests.slice(0, doneQuests.length-1)) } }> Next</button></div></>
           }
           if(display === "hunter"){
-            return <ProducingCompany state={state} update={forceUpdate} index={0} tag={"Blacksmithing Guild"} allowed_stuff={["food", "wood", "magic feathers", "fire spirits", "ice crystals", "orbs of darkness", "phoenix eggs", "fairy dust", "dragon skin"]}/>
+            return <ProducingCompany state={state} update={forceUpdate} index={0} tag={"Hunting Lodge"} allowed_stuff={["food", "wood", "magic feathers", "fire spirits", "ice crystals", "orbs of darkness", "phoenix eggs", "fairy dust", "dragon skin"]}/>
           }
           if(display === "smith"){
-            return <ProducingCompany state={state}  update={forceUpdate}  index={10} tag={"Hunting Lodge"} allowed_stuff={["copper swords", "iron swords", "steel swords", "steel arrowheads", "ice swords", "fire swords", "holy swords", "frost bows", "arcane robes", "omni-enchanted swords", "dragonhide armor"]}/>
+            return <ProducingCompany state={state}  update={forceUpdate}  index={1} tag={"Blacksmithing Guild"} allowed_stuff={["copper swords", "iron swords", "steel swords", "steel arrowheads", "ice swords", "fire swords", "holy swords", "frost bows", "arcane robes", "omni-enchanted swords", "dragonhide armor"]}/>
           }
           if(display === "explorer"){
             return <Research state={state}  update={forceUpdate}/>
@@ -125,6 +157,7 @@ function App({state} :{state :  game_state_interface}) {
             return <ContractSigning state={state} update={setDisplay} preamble={preamble}  contract={contract}/>
           }
         }()}
+        </div>
     </>
    
   )

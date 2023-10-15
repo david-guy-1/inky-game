@@ -1,5 +1,5 @@
-import { contract, game_state_interface , main_contract_type, resource_type} from "./State";
-import { contract_dag, contract_costs, main_contracts } from "./contract_info";
+import { contract, game_state_interface , resource_type} from "./State";
+import { contract_dag, contract_costs } from "./contract_info";
 
 let contract_hints : {[key in contract] : string}  = {
     "make some food": "The king wants us to make some food",

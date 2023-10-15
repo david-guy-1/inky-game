@@ -15,6 +15,7 @@ intro += "var main_contract : main_contract_type[] = " + json.dumps(main_contrac
 s = ""
 s += """
 interface game_state_interface {
+"day":number,
   "money" : number,
   "research grant" : number,
   "worker wages" : [number, number, number],

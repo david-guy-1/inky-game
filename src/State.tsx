@@ -7,6 +7,7 @@ var main_contract : main_contract_type[] = ["explore land in the north", "clear 
 
 
 interface game_state_interface {
+"day":number,
   "money" : number,
   "research grant" : number,
   "worker wages" : [number, number, number],
@@ -85,6 +86,7 @@ contracts :{ "explore land in the north" : contract_state,"clear out copper mine
 }
 
 var game_state_initial : game_state_interface =  {
+"day":0,
   "money" : 0,
   "research grant" : 0,
   "worker wages" : [0, 0, 0],
