@@ -73,6 +73,13 @@ function App({state} :{state :  game_state_interface}) {
   } 
   return (
     <>    
+
+        {function(){
+          if(display === "donequests"){
+            var quest = doneQuests[0];
+            return  <div>Task completed :  {quest}<br /><span style={{"width" : "700px", display: "inline-block"}}> {postambles[quest]} </span><img src={"top bar/next.png"} style={{position:"absolute", "top" : "0px", "left":"720px"}} onClick={() => { setDoneQuests(doneQuests.slice(0, doneQuests.length-1)) } } /></div>
+          }
+        }()}
         {display ===  "signing" || display === "donequests" ? null : <>
           <div style={{"position" : "absolute", top:"0px", left:"0px" }}>
           <img src={"top bar/base.png"}  style={{position:"absolute", "top" : "0px", "left":"0px"}}/>
@@ -137,7 +144,7 @@ function App({state} :{state :  game_state_interface}) {
           }
           if(display === "donequests"){
               var quest = doneQuests[0];
-              return <><img src={"quests/" + quest + ".png"}/><div>Task completed :  {quest}<br /> {postambles[quest]} <button onClick={() => { setDoneQuests(doneQuests.slice(0, doneQuests.length-1)) } }> Next</button></div></>
+              return <><img src={"quests/" + quest + ".png"}/></>
           }
           if(display === "hunter"){
             return <ProducingCompany state={state} update={forceUpdate} index={0} tag={"Hunting Lodge"} allowed_stuff={["food", "wood", "magic feathers", "fire spirits", "ice crystals", "orbs of darkness", "phoenix eggs", "fairy dust", "dragon skin"]}/>
