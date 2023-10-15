@@ -20,7 +20,7 @@ function Research({state, update} :{state :  game_state_interface, update: Funct
                     continue;
                 }
                 lst.push(<> 
-                    <div style={{"position": "absolute", "top":90 *i + 10, "left" :300 * Math.floor(i/7)  }}><Resource name={item} state={state} index = {2}/> </div>
+                    <div style={{"position": "absolute", "top":82 *(i%7) + 10, "left" :310 * Math.floor(i/7)  }}><Resource name={item} state={state} index = {2}/> </div>
                     </>)
                 i+=1;
             }

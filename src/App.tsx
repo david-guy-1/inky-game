@@ -118,7 +118,7 @@ function App({state} :{state :  game_state_interface}) {
               <div style={{"position" : "absolute", "top" : "124px", "left":"134px", "width":"558px"}}>
                 {/* 134-692, 129-500 , w558, h371*/}
                 <div style={{"position" : "absolute", "top" : "0px", "left":"0px"}}>
-                {state.money} gold ({state['research grant']}/day)
+                {state.money} gold ({state['research grant']}/day, {_.sum(wages[1])} wages)
                 </div>
                 <div style={{"position" : "absolute", "top" : "0px", "left":"250px"}}>
                 You have
