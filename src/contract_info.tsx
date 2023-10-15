@@ -52,110 +52,136 @@ edges.push(["fend off invaders", "explore land in the west"]);
 console.log(edges)
 var contract_dag : dag<contract> = new dag<contract>(contracts, edges)
 
-let contract_costs : {[key in contract] : {money : number, resources : Partial<Record<resource_type, number>>}} = {
+let contract_costs : {[key in contract] : {money : number, resources : Partial<Record<resource_type, number>> , reward : number}} = {
     "make some food": {
         money: 0,
-        resources:  {"food" : 4}
+        resources:  {"food" : 4},
+        reward: 400
     },
     "explore land in the north": {
         money: 1000,
-        resources: {"food" : 4}
+        resources: {"food" : 4},
+        reward: 0
     },
     "clear out copper mine": {
         money: 1000,
-        resources:  {"food": 4, "wood":3}
+        resources:  {"food": 4, "wood":3},
+        reward: 100
     },
     "explore land in the south": {
         money: 1500,
-        resources:  {"food": 4}
+        resources:  {"food": 4},
+        reward: 0
     },
     "clear out iron mine": {
         money: 1500,
-        resources:  {"copper swords" : 3, "food" : 5}
+        resources:  {"copper swords" : 3, "food" : 5},
+        reward: 200
     },
     "explore land in the east": {
         money: 1500,
-        resources:  {"food": 3}
+        resources:  {"food": 3},
+        reward: 0
     },
     "fend off invaders": {
         money: 0,
-        resources:  {"iron swords" : 3}
+        resources:  {"iron swords" : 3},
+        reward: 500
     },
     "clear out coal mine": {
         money: 1700,
-        resources:  {"iron swords" : 4, "food" : 3}
+        resources:  {"iron swords" : 4, "food" : 3},
+        reward: 300,
     },
     "explore land in the west": { // unlocks magic feathers
         money: 2000,
-        resources:  {"food" : 3}
+        resources:  {"food" : 3},
+        reward: 0
     },
     "grow kingdom": {
         money: 6000,
-        resources:  {"wood": 10, "food" : 10}
+        resources:  {"wood": 10, "food" : 10},
+        reward: 1000
     },
     "research steelmaking": {
         money: 1000,
-        resources:  {"food" : 4, "wood" : 5, "iron swords" : 3}
+        resources:  {"food" : 4, "wood" : 5, "iron swords" : 3},
+        reward: 0
     },
     "research steel fletching": {
         money: 1500,
-        resources:  {"wood": 10}
+        resources:  {"wood": 10},
+        reward: 0
     },
     "explore magma cave": {
         money: 3000,
-        resources:  {"steel swords" : 5, "steel arrowheads" : 5}
+        resources:  {"steel swords" : 5, "steel arrowheads" : 5},
+        reward: 0
     },
     "make deal with witches": {
         money: 10000,
-        resources:  {"fire spirits" : 7, "magic feathers" : 4}
+        resources:  {"fire spirits" : 7, "magic feathers" : 4},
+        reward: 1200
     },
     "research elemental enchantments": {
         money: 4000,
-        resources:  {"food" : 10, "wood" : 10, "fire spirits" : 10,  "magic feathers" : 6}
+        resources:  {"food" : 10, "wood" : 10, "fire spirits" : 10,  "magic feathers" : 6},
+        reward: 500
     },
     "explore ice cave": {
         money: 5000,
-        resources:  {"fire swords" : 10, "food" : 10, "fire spirits" : 5, "arcane robes" : 5}
+        resources:  {"fire swords" : 10, "food" : 10, "fire spirits" : 5, "arcane robes" : 5},
+        reward: 0
     },
     "make deal with angels": {
         money: 20000,
-        resources:  {"fire spirits" :10, "ice crystals" : 10, "arcane robes" : 10}
+        resources:  {"fire spirits" :10, "ice crystals" : 10, "arcane robes" : 10},
+        reward: 2000
     },
     "research holy enchantment": {
         money: 5500,
-        resources:  {"fire spirits" : 10, "ice crystals" : 10, "food": 15,  "magic feathers" : 20}
+        resources:  {"fire spirits" : 10, "ice crystals" : 10, "food": 15,  "magic feathers" : 20},
+        reward: 500
     },
     "open a portal to the land of the dead": { // unlocks orbs of darkness
         money: 6000,
-        resources:  {"fire spirits" : 10, "magic feathers" : 20, "holy swords" : 20}
+        resources:  {"fire spirits" : 10, "magic feathers" : 20, "holy swords" : 20},
+        reward: 1000
     },
     "make deal with fairies": { // unlcoks fairy dust
         money: 10000,
-        resources:  {"fire spirits" : 10, "ice crystals" : 15, "magic feathers" : 20}
+        resources:  {"fire spirits" : 10, "ice crystals" : 15, "magic feathers" : 20},
+        reward: 2500
     },
     "research advanced enchantment techniques": { // unlocks omni
         money: 15000,
-        resources:  {"fire spirits" : 10, "ice crystals" : 15,"fairy dust" : 20}
+        resources:  {"fire spirits" : 10, "ice crystals" : 15,"fairy dust" : 20},
+        reward: 1000
     },
     "fend off magic invaders": {
         money: 0,
-        resources:  {"frost bows" : 10, "fire swords" : 10, "ice swords" :10, "holy swords" : 10, "arcane robes" : 15}
+        resources:  {"frost bows" : 10, "fire swords" : 10, "ice swords" :10, "holy swords" : 10, "arcane robes" : 15},
+        reward: 3000
     },
     "explore mapped region": { // unlocks dragon and phoenix stuff
         money: 30000,
-        resources:  {"frost bows" : 20, "holy swords" : 20}
+        resources:  {"frost bows" : 20, "holy swords" : 20},
+        reward: 0
     },
     "research dragonhide crafting": {
         money: 40000,
-        resources:  {"orbs of darkness" : 10, "phoenix eggs" : 10, "fairy dust" : 10}
+        resources:  {"orbs of darkness" : 10, "phoenix eggs" : 10, "fairy dust" : 10},
+        reward: 0
     },
     "research dragon anatomy": {
         money: 50000,
-        resources:  {"dragon skin" : 10, "phoenix eggs" : 20}
+        resources:  {"dragon skin" : 10, "phoenix eggs" : 20},
+        reward: 2000
     },
     "kill dragon": {
         money: 100000,
-        resources:  {"fire swords" : 50, "ice swords" : 50, "holy swords" : 100, "frost bows" : 100, "dragonhide armor" : 200, "omni-enchanted swords" : 200}
+        resources:  {"fire swords" : 50, "ice swords" : 50, "holy swords" : 100, "frost bows" : 100, "dragonhide armor" : 200, "omni-enchanted swords" : 200},
+        reward: 0
     },
     
 }

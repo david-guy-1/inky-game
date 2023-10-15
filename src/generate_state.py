@@ -59,10 +59,16 @@ t = t.replace("number", "0")
 
 t = t.replace("contract_state", "\"not signed\"")
 variable_setters = """
-game_state_initial.money =1000000;
-game_state_initial["research grant"] =1000000;
+game_state_initial.money =10000;
+game_state_initial["research grant"] =1000;
 game_state_initial['worker wages'] = [1000, 1100, 1200];
- """
+game_state_initial["selling prices"] = { """
+
+price = 200
+for item in "food,wood,magic feathers,fire spirits,ice crystals,orbs of darkness,phoenix eggs,fairy dust,dragon skin,copper swords,iron swords,steel swords,steel arrowheads,ice swords,fire swords,holy swords,frost bows,arcane robes,omni-enchanted swords,dragonhide armor".split(","):
+    price += 10
+    variable_setters += f"\"{item}\" : {price},"
+variable_setters += "};\n"
 result = intro + "\n" + s + "\n" + t + "\n" + variable_setters+"export {game_state_initial, type contract, type game_state_interface, resources, main_contract,  type resource_type, type main_contract_type };"
 open("State.tsx", "w").write(result)
 print("done")

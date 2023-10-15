@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-import { game_state_interface, main_contract_type, resource_type, resources } from "./State";
+import { game_state_interface, main_contract, main_contract_type, resource_type, resources } from "./State";
 import { main_contracts, quest_length } from "./contract_info";
 
 function add(state : game_state_interface, resource :  resource_type | main_contract_type, index : number){
@@ -31,6 +31,7 @@ function subtract(state : game_state_interface, resource : resource_type | main_
 }
 function resource_or_quest(item : string) : ("resource"|"quest" | "neither"){
     if(main_contracts.indexOf(item as main_contract_type) !== -1){
+        
         return "quest"
     } 
     if(resources.indexOf(item as resource_type) !== -1){

@@ -32,8 +32,12 @@ let contract_hints : {[key in contract] : string}  = {
 
 
 function contract_string(state : game_state_interface) : string{ 
-    let exposed = contract_dag.get_exposed_vertices(new Set((Object.keys(state.contracts) as contract[]).filter((x) => state.contracts[x] !== "not signed") ));
+    let exposed = contract_dag.get_exposed_vertices(new Set((Object.keys(state.contracts) as contract[]).filter((x) => state.contracts[x] === "complete") ));
     for(let item of exposed){
+        // don't hint in progress contracts
+        if(state.contracts[item] !== "not signed"){
+            continue;
+        }
         let hint = contract_hints[item];
         hint += "\nThis will require " 
         let cost = contract_costs[item];
@@ -51,7 +55,7 @@ function contract_string(state : game_state_interface) : string{
         }
         return hint;
     }
-    return "Everything is going well";
+    return "Complete some quests at the Center of Research and Exploration to progress further.";
 }
 
 export default contract_string;

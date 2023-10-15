@@ -10,9 +10,9 @@ import Contract from './Contract';
 import ContractSigning from './ContractSigning';
 import React from 'react';
 import contract_string from './contract_string';
-import { contracts, main_contracts, postambles, quest_length } from './contract_info';
+import { contract_costs, contracts, main_contracts, postambles, quest_length } from './contract_info';
 
-type location = "hunter" | "smith" | "explorer"  |"total" | "contract" | "signing" | "donequests"
+type location = "hunter" | "smith" | "explorer"  |"total" | "contract" | "signing" | "donequests" | "warn"
 // mutates state
 
 
@@ -25,7 +25,13 @@ function compute_wages(state : game_state_interface) : [[number, number, number]
   }
   return [workers, costs];
 }
-function nextDay(state : game_state_interface) : contract[]{
+function nextDay(state : game_state_interface) : contract[] | string{
+  // check if you can 
+
+  var wages = compute_wages(state);
+  if(state.money + state['research grant'] < _.sum(wages[1])){
+    return "not enough money to pay that day's wages. Remove some workers or sell some items.";
+  }
   state.day += 1;
   // generate parts
   for(var item of resources){
@@ -33,7 +39,6 @@ function nextDay(state : game_state_interface) : contract[]{
   }
 
   // pay wages
-  var wages = compute_wages(state);
   for(var i=0; i<3; i++){
     state.money -= wages[1][i];
   }
@@ -56,7 +61,10 @@ function nextDay(state : game_state_interface) : contract[]{
       }
     }
   }
-
+  // give out rewards
+  for(var contract of done){
+    state['research grant'] += contract_costs[contract].reward;
+  }
   return done;
 }
 function App({state} :{state :  game_state_interface}) {
@@ -64,6 +72,7 @@ function App({state} :{state :  game_state_interface}) {
   const [, forceUpdate] = useReducer((x) => !x, false);
   const [display, setDisplay] = useState<location>("total");
   const [contractData, goSign] = useState("");
+  const [warning, setWarning] = useState("");
   const [doneQuests, setDoneQuests] = useState<contract[]>([]);
   var wages = compute_wages(state); 
   if(display !== "donequests" && doneQuests.length !== 0){
@@ -77,7 +86,10 @@ function App({state} :{state :  game_state_interface}) {
         {function(){
           if(display === "donequests"){
             var quest = doneQuests[0];
-            return  <div>Task completed :  {quest}<br /><span style={{"width" : "700px", display: "inline-block"}}> {postambles[quest]} </span><img src={"top bar/next.png"} style={{position:"absolute", "top" : "0px", "left":"720px"}} onClick={() => { setDoneQuests(doneQuests.slice(0, doneQuests.length-1)) } } /></div>
+            if(quest === undefined) {
+              return '';
+            }
+            return  <div>Task completed :  {quest}<br /><span style={{"width" : "700px", display: "inline-block"}}> {postambles[quest]}<br />{contract_costs[quest].reward !== 0 ? "+" + contract_costs[quest].reward  + "gold / day" : null} </span><img src={"top bar/next.png"} style={{position:"absolute", "top" : "0px", "left":"720px"}} onClick={() => { setDoneQuests(doneQuests.slice(0, doneQuests.length-1)) } } /></div>
           }
         }()}
         {display ===  "signing" || display === "donequests" ? null : <>
@@ -138,7 +150,15 @@ function App({state} :{state :  game_state_interface}) {
                     return lst; 
                 }()}
               </div>
-              <img src="icons/next day.png" style={{"position" : "absolute", left  : "285px", top:"526px"}} onClick={() => {setDoneQuests(nextDay(state)); forceUpdate()}} />
+              <img src="icons/next day.png" style={{"position" : "absolute", left  : "285px", top:"526px"}} onClick={() => {
+                var next = nextDay(state);
+                if(typeof(next) === "string"){
+                  setDisplay("warn");
+                  setWarning(next);
+                } else { 
+                  setDoneQuests(next);
+                }
+                forceUpdate()}} />
               </>
             )
           }
@@ -167,6 +187,15 @@ function App({state} :{state :  game_state_interface}) {
             var preamble = contractData.split("|")[1]
             return <>
             <img src={"backgrounds/contract.png"}  style={{position:"absolute", "top" : "0px", "left":"0px", "zIndex" : -1}}/><ContractSigning state={state} update={setDisplay} preamble={preamble}  contract={contract}/></>
+          }
+          if(display === "warn"){
+            return <>
+            <img src={"backgrounds/base.png"}  style={{position:"absolute", "top" : "0px", "left":"0px", "zIndex" : -1}}/>
+            <div style={{"position" : "absolute", "top" : "124px", "left":"134px", "width":"558px"}}>
+            Warning : {warning}<br />
+            Click the "back" button at the top to go back.
+            </div>
+            </>
           }
         }()}
         </div>
