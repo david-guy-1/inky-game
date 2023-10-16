@@ -22,7 +22,7 @@ let contract_hints : Partial<{[key in contract] : string}>  = {
     "research holy enchantment": "The angels have given us the secret to enchanting our swords with holy power. Let's use them.",
     "make deal with fairies": "The fairy queen wants to trade with us. We can get some fairy dust from them.",
     "open a portal to the land of the dead": "With our new holy swords, we can now fight undead creatures and get their treasures. We first need to open a portal.",
-    "research advanced enchantment techniques": "Fairy dust has many useful properties, but the most important one is to enchant our swords with multiple enchantments at once. ",
+    "research advanced enchantment": "Fairy dust has many useful properties, but the most important one is to enchant our swords with multiple enchantments at once. ",
     "fend off magic invaders": "Our research into enchanting swords with fairy dust has caught the attention of magical creatures who want to steal the technology from us. Fight them off!",
     "explore mapped region": "One of the magical creatures that invaded us had a map on them. The labels \"Dragon den\" and \"Phoenix nest\" are on it. Let's explore those areas.",
     "research dragonhide crafting": "If we learn to work with dragonhide, we can make armor with it.",
@@ -51,7 +51,7 @@ function contract_string(state : game_state_interface) : string{
         for(let res  of Object.keys(cost.resources)){
             let costN = cost.resources[res as resource_type]
             if(costN !== undefined){
-                hint += costN.toString() + " " + res + ","
+                hint += costN.toString() + " " + res + ", "
             }
         } 
         if(cost.money !== 0){

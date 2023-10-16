@@ -39,8 +39,7 @@ function resource_or_quest(item : string) : ("resource"|"quest" | "neither"){
     }
     return "neither" 
 }
-function Resource({name, state, index} : {name : resource_type | main_contract_type, state : game_state_interface, index : number}){
-    const [, update] = useReducer((x) => !x, false)
+function Resource({name, state, index, update} : {name : resource_type | main_contract_type, state : game_state_interface, index : number, update : Function}){
     return <div style={{"position" : "absolute", "width" :300, "height" : 80, backgroundColor:"white"}}>
         <img src={resource_or_quest(name) === "resource" ? "resources/" + name + ".png" : "resources/quest.png"} style={{"position":"absolute", "top":0, "left":0}}/>
         <span style={{"position":"absolute", "top":3, "left":82, width : 190, "overflowWrap": "break-word"}} >{name} : {resource_or_quest(name) === "quest" ? state["quest progress"][name as main_contract_type] + "/" + quest_length[name as main_contract_type]: state.resources[name as resource_type]}</span>

@@ -76,7 +76,7 @@ resource names : ["food", "wood", "magic feathers", "fire spirits", "ice crystal
 
 ["copper swords", "iron swords", "steel swords", "steel arrowheads", "ice swords","frost bows", "fire swords", "holy swords",  "arcane robes", "omni-enchanted words", "dragonhide armor"]
 
-[ "make some food", "explore land in the north","clear out copper mine",  "explore land in the south", "clear out iron mine","explore land in the east","fend off invaders", "clear out coal mine", "explore land in the west","grow kingdom", "research steelmaking", "research steel fletching","explore magma cave", "make deal with witches", "research elemental enchantments","explore ice cave", "make deal with angels","research holy enchantment", "open a portal to the land of the dead", "make deal with fairies", "research advanced enchantment techniques","fend off magic invaders", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon"]
+[ "make some food", "explore land in the north","clear out copper mine",  "explore land in the south", "clear out iron mine","explore land in the east","fend off invaders", "clear out coal mine", "explore land in the west","grow kingdom", "research steelmaking", "research steel fletching","explore magma cave", "make deal with witches", "research elemental enchantments","explore ice cave", "make deal with angels","research holy enchantment", "open a portal to the land of the dead", "make deal with fairies", "research advanced enchantment","fend off magic invaders", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon"]
 
 for every vertex (contract) : 
 
@@ -87,7 +87,7 @@ if it requires a resource, then add all of those resources
 
 explorers (go on quests) : 
 
-["explore land in the north","clear out copper mine",  "explore land in the south", "clear out iron mine","explore land in the east","clear out coal mine", "explore land in the west", "research steelmaking", "research steel fletching","explore magma cave", "research elemental enchantments","explore ice cave", "research holy enchantment", "open a portal to the land of the dead", "make deal with fairies", "research advanced enchantment techniques", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon"]
+["explore land in the north","clear out copper mine",  "explore land in the south", "clear out iron mine","explore land in the east","clear out coal mine", "explore land in the west", "research steelmaking", "research steel fletching","explore magma cave", "research elemental enchantments","explore ice cave", "research holy enchantment", "open a portal to the land of the dead", "make deal with fairies", "research advanced enchantment", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon"]
 
 I'll equate explorers and contracts for now. contract must be signed before the corresponding exploration quest can be undertaken. 
 

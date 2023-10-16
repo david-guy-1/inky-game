@@ -1,16 +1,16 @@
 import dag from "./dag"
 import { contract, contracts, game_state_interface, main_contract_type, resource_type } from "./State"
 
-let storyline_contracts : contract[] = ["explore land in the north","clear out copper mine",  "explore land in the south", "clear out iron mine","explore land in the east", "clear out coal mine", "explore land in the west", "research steelmaking", "research steel fletching","explore magma cave", "grow kingdom","research elemental enchantments","explore ice cave","research holy enchantment", "open a portal to the land of the dead", "make deal with fairies", "research advanced enchantment techniques", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon"]
+let storyline_contracts : contract[] = ["explore land in the north","clear out copper mine",  "explore land in the south", "clear out iron mine","explore land in the east", "clear out coal mine", "explore land in the west", "research steelmaking", "research steel fletching","explore magma cave", "grow kingdom","research elemental enchantments","explore ice cave","research holy enchantment", "open a portal to the land of the dead", "make deal with fairies", "research advanced enchantment", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon"]
 
 
 
 let deadlines : Partial<Record<contract, number>> = {
-    "clear out copper mine" : 10,
-    "explore land in the west" : 30,
-    "grow kingdom" : 50,
-    "research holy enchantment" : 75,
-    "kill dragon" : 100
+    "clear out copper mine" : 15,
+    "explore land in the west" : 40,
+    "grow kingdom" : 75,
+    "research holy enchantment" : 120,
+    "kill dragon" : 180
 }
 
 
@@ -45,7 +45,7 @@ edges.push(["make some food", "explore land in the north"]);
 edges.push(["explore land in the east", "fend off invaders"]);
 edges.push(["fend off invaders", "explore land in the west"]);
 
-edges.push(["research advanced enchantment techniques", "fend off magic invaders"]);
+edges.push(["research advanced enchantment", "fend off magic invaders"]);
 edges.push(["fend off magic invaders", "explore mapped region"]);
 
 edges.push(["explore ice cave", "make deal with angels"]);
@@ -73,7 +73,7 @@ let contract_costs : {[key in contract] : {money : number, resources : Partial<R
     "make some food": {
         money: 0,
         resources: { "food": 4 },
-        reward: 400
+        reward: 500
     },
     "explore land in the north": {
         money: 1000,
@@ -83,7 +83,7 @@ let contract_costs : {[key in contract] : {money : number, resources : Partial<R
     "clear out copper mine": {
         money: 1000,
         resources: { "food": 4, "wood": 3 },
-        reward: 100
+        reward: 250
     },
     "explore land in the south": {
         money: 1500,
@@ -93,7 +93,7 @@ let contract_costs : {[key in contract] : {money : number, resources : Partial<R
     "clear out iron mine": {
         money: 1500,
         resources: { "copper swords": 3, "food": 5 },
-        reward: 200
+        reward: 350
     },
     "explore land in the east": {
         money: 1500,
@@ -108,7 +108,7 @@ let contract_costs : {[key in contract] : {money : number, resources : Partial<R
     "clear out coal mine": {
         money: 1700,
         resources: { "iron swords": 4, "food": 3 },
-        reward: 300,
+        reward: 500,
     },
     "explore land in the west": {
         money: 2000,
@@ -123,17 +123,17 @@ let contract_costs : {[key in contract] : {money : number, resources : Partial<R
     "research steelmaking": {
         money: 1000,
         resources: { "food": 4, "wood": 5, "iron swords": 3 },
-        reward: 0
+        reward: 1500
     },
     "research steel fletching": {
         money: 1500,
         resources: { "wood": 10 },
-        reward: 0
+        reward: 1500
     },
     "explore magma cave": {
         money: 3000,
         resources: { "steel swords": 5, "steel arrowheads": 5 },
-        reward: 0
+        reward: 2000
     },
     "make deal with witches": {
         money: 10000,
@@ -153,12 +153,12 @@ let contract_costs : {[key in contract] : {money : number, resources : Partial<R
     "make deal with angels": {
         money: 20000,
         resources: { "fire spirits": 10, "ice crystals": 10, "arcane robes": 10 },
-        reward: 2000
+        reward: 1800
     },
     "research holy enchantment": {
         money: 5500,
         resources: { "fire spirits": 10, "ice crystals": 10, "food": 15, "magic feathers": 20 },
-        reward: 500
+        reward: 0
     },
     "open a portal to the land of the dead": {
         money: 6000,
@@ -168,17 +168,17 @@ let contract_costs : {[key in contract] : {money : number, resources : Partial<R
     "make deal with fairies": {
         money: 10000,
         resources: { "fire spirits": 10, "ice crystals": 15, "magic feathers": 20 },
-        reward: 2500
+        reward: 2300
     },
-    "research advanced enchantment techniques": {
+    "research advanced enchantment": {
         money: 15000,
         resources: { "fire spirits": 10, "ice crystals": 15, "fairy dust": 20 },
-        reward: 1000
+        reward: 800
     },
     "fend off magic invaders": {
         money: 0,
         resources: { "frost bows": 10, "fire swords": 10, "ice swords": 10, "holy swords": 10, "arcane robes": 15 },
-        reward: 3000
+        reward: 2750
     },
     "explore mapped region": {
         money: 30000,
@@ -196,8 +196,8 @@ let contract_costs : {[key in contract] : {money : number, resources : Partial<R
         reward: 2000
     },
     "kill dragon": {
-        money: 100000,
-        resources: { "fire swords": 50, "ice swords": 50, "holy swords": 100, "frost bows": 100, "dragonhide armor": 200, "omni-enchanted swords": 200 },
+        money: 80000,
+        resources: { "fire swords": 50, "ice swords": 50, "holy swords": 80, "frost bows": 80, "dragonhide armor": 125, "omni-enchanted swords": 125 },
         reward: 0
     },
     "make trade deal": {
@@ -240,7 +240,7 @@ let resource_requirements : Record<resource_type, contract[]> = {
     "holy swords": ["make deal with angels", "research holy enchantment"],
     "frost bows": ["explore ice cave"],
     "arcane robes": ["make deal with witches"],
-    "omni-enchanted swords": ["research advanced enchantment techniques"],
+    "omni-enchanted swords": ["research advanced enchantment"],
     "dragonhide armor": ["research dragonhide crafting"]
 }
 
@@ -303,7 +303,7 @@ let contract_conditions : {[key in contract ] : (a : game_state_interface ) => b
     "make deal with fairies": function (a: game_state_interface): boolean {
         return true
     },
-    "research advanced enchantment techniques": function (a: game_state_interface): boolean {
+    "research advanced enchantment": function (a: game_state_interface): boolean {
         return true
     },
     "explore mapped region": function (a: game_state_interface): boolean {
@@ -370,9 +370,9 @@ let preambles : {[key in contract] : string} = {
     "research holy enchantment": "This contract is between the King and Center of Research and Exploration. They are to explore the possibility of enchanting our swords with holy magic.",
     "open a portal to the land of the dead": "This contract is between the King and Center of Research and Exploration. The undead hold vast treasures and they are to explore ways to access those treasures. ",
     "make deal with fairies": "This contract is between the Center of Research and Exploration and the Fairy Queen. They are to provide us with fairy dust in exchange for various resources. ",
-    "research advanced enchantment techniques": "This contract is between the King and Center of Research and Exploration, concerning the investigation of enchanting swords with fairy dust.",
+    "research advanced enchantment": "This contract is between the King and Center of Research and Exploration, concerning the investigation of enchanting swords with fairy dust.",
     "explore mapped region": "This contract is between the King and Center of Research and Exploration. They are to explore the regions labelled in the map that the invaders left.",
-    "research dragonhide crafting": "This contract is between the King and Center of Research and Exploration. They are to explore the regions labelled in the map that the invaders left.",
+    "research dragonhide crafting": "This contract is between the King and Center of Research and Exploration. They are to build a new kind of armor from dragonhide.",
     "research dragon anatomy": "This contract is between the King and Center of Research and Exploration. They are to study the inner workings of dragons to learn their weak spots.",
     "kill dragon": "This contract is between the King and the entire kingdom. They are to kill the dragon that has been terrorizing us for years.",
     "grow kingdom": "This contract is between the King and the entire kingdom. They are to build more cities and expand the kingdom to fit our growing population.",
@@ -407,12 +407,12 @@ let postambles : {[key in contract] : string} = {
     "research holy enchantment": "We've unlocked one of the most powerful enchantments for our sword (maybe there is an even more powerful one? hint hint. You can now make holy swords)",
     "open a portal to the land of the dead": "We've opened a portal! We can now hunt undead monsters! (You can now hunt liches for orbs of darkness)",
     "make deal with fairies": "The fairy queen is pleased. She allows us to collect fairy dust from her kingdom. ",
-    "research advanced enchantment techniques": "We've found a way to enchant our sword with all enchantments at once! This is a huge breakthrough! However others will certainly try to steal this knowledge from us. (You can now make omni-enchanted swords)",
+    "research advanced enchantment": "We've found a way to make omni-enchanted swords! This is a huge breakthrough! However others will certainly try to steal this knowledge from us. (You can now make omni-enchanted swords)",
     "fend off magic invaders": "The invaders have been defeated! They are no match for our omni-enchanted swords!\n Oh, what's this? One of them left behind a map! We will definitely use this well!",
     "explore mapped region": "We've explored those regions. One of them is a giant cache of phoenix eggs that have been left unguarded. The other is a dragon lair. Maybe the dragon is there! (You can now collect phoenix eggs and dragon skin)",
     "research dragonhide crafting": "Dragon skin is useful for armor. We've developed a new kind of armor using it (You can now make dragonhide armor)",
     "research dragon anatomy": "We've figured out where to best strike the dragon to maximize the chance of killing them.",
-    "kill dragon": "We did it! The dragon is no more!",
+    "kill dragon": "We did it! The dragon is no more! (You have completed this game)",
     "make trade deal": "We have established a trade deal. We can now sell for more and hire for less",
     "help the witches": "The witches have offered to pay some of our wages. We can now hire for less",
     "help the angels": "The angels are thankful and will give us a holy sword every day.",
@@ -437,7 +437,7 @@ let quest_length  : {[key in contract] : number}   = {
     "research holy enchantment": 12,
     "open a portal to the land of the dead": 14,
     "make deal with fairies": 15,
-    "research advanced enchantment techniques": 20,
+    "research advanced enchantment": 20,
     "explore mapped region": 25,
     "research dragonhide crafting": 30,
     "research dragon anatomy": 40,

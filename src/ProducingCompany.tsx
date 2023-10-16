@@ -22,7 +22,7 @@ function ProducingCompany({state, update, tag, index, allowed_stuff} : Producing
                     continue;
                 }
 
-                lst.push(<div style={{"position": "absolute", "top":82 *(i%7) + 10, "left" :310 * Math.floor(i/7)  }}><Resource name={item} state={state} index = {index}/> </div>)
+                lst.push(<div style={{"position": "absolute", "top":82 *(i%7) + 10, "left" :310 * Math.floor(i/7)  }}><Resource name={item} state={state} index = {index} update={update}/> </div>)
                 i+=1;
             }
             return lst; 

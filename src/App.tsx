@@ -10,8 +10,9 @@ import ContractSigning from './ContractSigning';
 import React from 'react';
 import contract_string from './contract_string';
 import { contract_costs, deadlines, postambles, quest_length } from './contract_info';
+import { get_valid_contracts } from './contract_fns';
 
-type location = "hunter" | "smith" | "explorer"  |"total" | "contract" | "signing" | "donequests" | "warn" | "events"
+type location = "hunter" | "smith" | "explorer"  |"total" | "contract" | "signing" | "donequests" | "warn" | "events" | "cheat"
 // mutates state
 
 
@@ -24,6 +25,19 @@ function compute_wages(state : game_state_interface) : [[number, number, number]
   }
   return [workers, costs];
 }
+var states : game_state_interface[] = [];
+
+function setState(state : game_state_interface, string : string){
+  Object.assign(state, JSON.parse(string));
+}
+function sayStates(){
+  console.log(JSON.stringify(states));
+  console.log("")
+  console.log("divider")
+  console.log("")
+  console.log(JSON.stringify(states[states.length - 1]))
+}
+
 function nextDay(state : game_state_interface) : {"contracts" : contract[], "events" : string[]} | string{
   // check if you can 
 
@@ -36,7 +50,7 @@ function nextDay(state : game_state_interface) : {"contracts" : contract[], "eve
   if(state.contracts['help the angels'] === "complete"){
     state.resources['holy swords'] += 1;
   }
-  
+
   for(var item of resources){
     if(item === "ice swords" && state.contracts['investigate monsters'] === "complete"){
       state.resources[item] += 2*state['worker allocation']["building"][item];
@@ -96,14 +110,21 @@ function nextDay(state : game_state_interface) : {"contracts" : contract[], "eve
       deadline_cost += 100
     }
   } 
-  if(state.day % 7  === 5){
+  if(state.day % 14  === 5 && state.day > 20){
     events.push("Due to advancements in technology by rival kingdoms, the prices of all goods have decreased")
     for(var sell_item of Object.keys(state['selling prices'])){
       // @ts-ignore
       state['selling prices'][sell_item] = Math.floor(state['selling prices'][sell_item] * 0.95);
     }
   }
-  if(deadline_cost !== 0){
+  if(state.day % 19  === 7 && state.day > 27){
+    events.push("Your workers are demanding to be paid more.")
+    for(var i = 0; i < 3; i++){
+      state['worker wages'][i] += 50;
+    }
+  }
+
+  if(deadline_cost !== 0 && state.day%4 === 0){
     events.push("The king thinks you're slacking off since you have not progressed fast enough. Complete more quests to prevent this. " + "-" + deadline_cost.toString() + "/day")
     state['research grant'] -= deadline_cost;
   }
@@ -124,10 +145,10 @@ function nextDay(state : game_state_interface) : {"contracts" : contract[], "eve
     events.push("A neighboring kingdom wants to do a trade deal with us. It will cost us some money and some resources. They are lookig for food, wood and some copper swords too");
     state.grow_event = true;
   }
+  states.push(JSON.parse(JSON.stringify(state)));
   return {"contracts" : done, "events" : events};
 }
 function App({state} :{state :  game_state_interface}) {
-
   const [, forceUpdate] = useReducer((x) => !x, false);
   const [display, setDisplay] = useState<location>("total");
   const [contractData, goSign] = useState("");
@@ -151,7 +172,7 @@ function App({state} :{state :  game_state_interface}) {
             if(quest === undefined) {
               return '';
             }
-            return  <div>Task completed :  {quest}<br /><span style={{"width" : "700px", display: "inline-block"}}> {postambles[quest]}<br />{contract_costs[quest].reward !== 0 ? "+" + contract_costs[quest].reward  + "gold / day" : null} </span><img src={"top bar/next.png"} style={{position:"absolute", "top" : "0px", "left":"720px"}} onClick={() => { setDoneQuests(doneQuests.slice(0, doneQuests.length-1)) } } /></div>
+            return  <div style={{"color":"white"}}>Task completed :  {quest}<br /><span style={{"width" : "700px", display: "inline-block"}}> {postambles[quest]}<br />{contract_costs[quest].reward !== 0 ? "+" + contract_costs[quest].reward  + "gold / day" : null} </span><img src={"top bar/next.png"} style={{position:"absolute", "top" : "0px", "left":"720px"}} onClick={() => { setDoneQuests(doneQuests.slice(1, doneQuests.length)) } } /></div>
           }
         }()}
         {display ===  "signing" || display === "donequests" || display === "events" ? null : <>
@@ -163,7 +184,11 @@ function App({state} :{state :  game_state_interface}) {
           
           <img src={"top bar/hunt.png"}  style={{position:"absolute", "top" : "0px", "left":"200px"}} onClick={() => {setDisplay("hunter");}} />
           <img src={"top bar/research.png"}  style={{position:"absolute", "top" : "0px", "left":"300px"}}  onClick={() => {setDisplay("explorer");}}/>
-          <img src={"top bar/contract.png"}  style={{position:"absolute", "top" : "0px", "left":"400px"}} onClick={() => {setDisplay("contract");}}/>
+          <img src={get_valid_contracts(state).length === 0 ? "top bar/contract.png" :"top bar/contract_new.png" }  style={{position:"absolute", "top" : "0px", "left":"400px"}} onClick={() => {setDisplay("contract");}}/>
+          <img src={"cheat.png"}  style={{position:"absolute", "top" : "0px", "left":"800px"}} onClick={() => {setDisplay("cheat");}}/>
+          <div style={{"position" : "absolute", "top" : "0px", "left":"500px", "color":"white", "width":130}}>
+                {state.money} gold ({state['research grant']}/day, {_.sum(wages[1])} wages)
+                </div>
           </div>
         </>}
         <div style={{"position" : "absolute", top:"80px", left:"0px", "width":"800px" }}>
@@ -179,9 +204,7 @@ function App({state} :{state :  game_state_interface}) {
 
               <div style={{"position" : "absolute", "top" : "124px", "left":"134px", "width":"558px"}}>
                 {/* 134-692, 129-500 , w558, h371*/}
-                <div style={{"position" : "absolute", "top" : "0px", "left":"0px"}}>
-                {state.money} gold ({state['research grant']}/day, {_.sum(wages[1])} wages)
-                </div>
+                
                 <div style={{"position" : "absolute", "top" : "0px", "left":"250px"}}>
                 You have
                 </div>
@@ -212,7 +235,7 @@ function App({state} :{state :  game_state_interface}) {
                     return lst; 
                 }()}
               </div>
-              <img src="icons/next day.png" style={{"position" : "absolute", left  : "285px", top:"526px"}} onClick={() => {
+              <img src="icons/next day.png" style={{"position" : "absolute", left  : "185px", top:"526px"}} onClick={() => {
                 var next = nextDay(state);
                 if(typeof(next) === "string"){
                   setDisplay("warn");
@@ -221,6 +244,17 @@ function App({state} :{state :  game_state_interface}) {
                   setDoneQuests(next.contracts);
                   setEvents(next.events);
                 }
+                forceUpdate()}} />
+              <img src="icons/clear workers.png" style={{"position" : "absolute", left  : "435px", top:"526px"}} onClick={() => {
+                for(var i=0; i<3; i++){
+                  state.workers[i] = 0
+                }
+                for(var item of resources){
+                state['worker allocation'].building[item] = 0
+                }
+                for(var item2 of main_contracts){
+                  state['worker allocation'].main_contract[item2] = 0
+                  }
                 forceUpdate()}} />
               </>
             )
@@ -235,8 +269,8 @@ function App({state} :{state :  game_state_interface}) {
               return "";
             }
             return <><img src={"backgrounds/event.png"}/> 
-            <span style={{"position": "absolute", "left":290, "top":268,"color":"white"}}>{event}</span>
-            <img src="top bar/next.png" style={{"position": "absolute", "left":590, "top":408}} onClick={() => { setEvents(events.slice(0, events.length-1))  }}></img>
+            <span style={{"position": "absolute", "left":190, "top":268,"color":"white", "width":550}}>{event}</span>
+            <img src="top bar/next.png" style={{"position": "absolute", "left":590, "top":408}} onClick={() => { setEvents(events.slice(1, events.length))  }}></img>
             </>
         }
           if(display === "hunter"){
@@ -251,6 +285,14 @@ function App({state} :{state :  game_state_interface}) {
           if(display === "explorer"){
             return  <>
             <img src={"backgrounds/research.png"}  style={{position:"absolute", "top" : "0px", "left":"0px", "zIndex" : -1}}/><Research state={state}  update={forceUpdate}/></>
+          }
+          if(display === "cheat"){
+            sayStates();
+
+            return  <>
+              <textarea id={"cheatbox"}></textarea>
+              <button onClick={() => setState(state, (document.getElementById("cheatbox") as HTMLTextAreaElement)?.value as string)}>cheat</button>
+            </>
           }
           if(display === "contract"){
             return  <><img src={"backgrounds/contract list.png"}  style={{position:"absolute", "top" : "0px", "left":"0px", "zIndex" : -1}}/><Contract state={state}  update={forceUpdate} goSign={(s : string) => {goSign(s); setDisplay("signing") } }/></>

@@ -1,7 +1,7 @@
 import json 
 import os
 resources = ["food", "wood", "magic feathers", "fire spirits", "ice crystals", "orbs of darkness", "phoenix eggs", "fairy dust", "dragon skin", "copper swords", "iron swords", "steel swords", "steel arrowheads", "ice swords", "fire swords", "holy swords", "frost bows", "arcane robes", "omni-enchanted swords", "dragonhide armor"]
-main_contract = ["explore land in the north","clear out copper mine",  "explore land in the south", "clear out iron mine","explore land in the east","clear out coal mine", "explore land in the west", "research steelmaking", "research steel fletching","explore magma cave", "research elemental enchantments","explore ice cave", "research holy enchantment", "open a portal to the land of the dead", "make deal with fairies", "research advanced enchantment techniques", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon", "grow kingdom", "help the witches", "help the angels", "investigate monsters"]
+main_contract = ["explore land in the north","clear out copper mine",  "explore land in the south", "clear out iron mine","explore land in the east","clear out coal mine", "explore land in the west", "research steelmaking", "research steel fletching","explore magma cave", "research elemental enchantments","explore ice cave", "research holy enchantment", "open a portal to the land of the dead", "make deal with fairies", "research advanced enchantment", "explore mapped region", "research dragonhide crafting", "research dragon anatomy", "kill dragon", "grow kingdom", "help the witches", "help the angels", "investigate monsters"]
 
 contracts = main_contract + [ "make deal with witches", "make deal with angels", "make some food", "fend off invaders", "fend off magic invaders", "make trade deal", ]
 
@@ -75,10 +75,10 @@ t = t.replace("number", "0")
 
 t = t.replace("contract_state", "\"not signed\"")
 variable_setters = """
-game_state_initial.money =10000;
-game_state_initial["research grant"] =1000;
+game_state_initial.money =20000;
+game_state_initial["research grant"] =1300;
 game_state_initial['worker wages'] = [1000, 1100, 1200];
-game_state_initial["selling prices"] = { "food" : 100,"wood" : 100,"magic feathers" : 150,"fire spirits" : 200,"ice crystals" : 250,"orbs of darkness" : 500,"phoenix eggs" : 1000,"fairy dust" : 1500,"dragon skin" : 2000,"copper swords" : 250,"iron swords" : 280,"steel swords" : 320,"steel arrowheads" : 330,"ice swords" : 440,"fire swords" : 500,"holy swords" : 750,"frost bows" : 420,"arcane robes" : 380,"omni-enchanted swords" : 1500,"dragonhide armor" : 2500,};
+game_state_initial["selling prices"] = {"food": 130, "wood": 130, "magic feathers": 195, "fire spirits": 260, "ice crystals": 325, "orbs of darkness": 650, "phoenix eggs": 1300, "fairy dust": 1950, "dragon skin": 2600, "copper swords": 325, "iron swords": 364, "steel swords": 416, "steel arrowheads": 429, "ice swords": 572, "fire swords": 650, "holy swords": 975, "frost bows": 546, "arcane robes": 494, "omni-enchanted swords": 1950, "dragonhide armor": 3250};
 
 """
 
