@@ -12,7 +12,7 @@ import contract_string from './contract_string';
 import { contract_costs, deadlines, postambles, quest_length } from './contract_info';
 import { get_valid_contracts } from './contract_fns';
 
-type location = "hunter" | "smith" | "explorer"  |"total" | "contract" | "signing" | "donequests" | "warn" | "events" | "cheat"
+type location = "hunter" | "smith" | "explorer"  |"total" | "contract" | "signing" | "donequests" | "warn" | "events" | "cheat" | "tutorial"
 // mutates state
 
 
@@ -150,7 +150,7 @@ function nextDay(state : game_state_interface) : {"contracts" : contract[], "eve
 }
 function App({state} :{state :  game_state_interface}) {
   const [, forceUpdate] = useReducer((x) => !x, false);
-  const [display, setDisplay] = useState<location>("total");
+  const [display, setDisplay] = useState<location>("tutorial");
   const [contractData, goSign] = useState("");
   const [warning, setWarning] = useState("");
   const [doneQuests, setDoneQuests] = useState<contract[]>([]);
@@ -184,15 +184,27 @@ function App({state} :{state :  game_state_interface}) {
           
           <img src={"top bar/hunt.png"}  style={{position:"absolute", "top" : "0px", "left":"200px"}} onClick={() => {setDisplay("hunter");}} />
           <img src={"top bar/research.png"}  style={{position:"absolute", "top" : "0px", "left":"300px"}}  onClick={() => {setDisplay("explorer");}}/>
-          <img src={get_valid_contracts(state).length === 0 ? "top bar/contract.png" :"top bar/contract_new.png" }  style={{position:"absolute", "top" : "0px", "left":"400px"}} onClick={() => {setDisplay("contract");}}/>
-          <img src={"cheat.png"}  style={{position:"absolute", "top" : "0px", "left":"800px"}} onClick={() => {setDisplay("cheat");}}/>
+		  <img src={"top bar/contract.png"}  style={{position:"absolute", "top" : "0px", "left":"380px"}}  onClick={() => {setDisplay("contract");}}/>
           <div style={{"position" : "absolute", "top" : "0px", "left":"500px", "color":"white", "width":130}}>
                 {state.money} gold ({state['research grant']}/day, {_.sum(wages[1])} wages)
                 </div>
           </div>
+		  
         </>}
         <div style={{"position" : "absolute", top:"80px", left:"0px", "width":"800px" }}>
         {function(){
+          if(display === "tutorial"){
+            return <div style={{color:"white", fontSize:"24", "fontFamily":"tahoma"}}>
+              Your goal is to kill a dragon that's been attacking your kingdom. <br />
+              Sign contract to progress, and send your people on quests after you sign them.
+              <br />
+              Just don't run out of money. The king gets impatient and your workers demand higher wages if you take too long.<br />
+
+<div onClick={() => setDisplay("total")} style={{"position" : "absolute", "top" : "200px", "left":"10px","fontSize":30, backgroundColor:"green"}}>
+                Continue
+                </div>
+              </div>
+          }
           if(display === "total"){ 
             return (
               <> 
@@ -200,6 +212,9 @@ function App({state} :{state :  game_state_interface}) {
               <div style={{"position" : "absolute", "top" : "50px", "left":"150px", "width":"538px"}}>
               {contract_string(state)}
               </div>
+              <div onClick={() => setDisplay("tutorial")} style={{"position" : "absolute", "top" : "577px", "left":"10px", backgroundColor:"green", fontSize : 20}}>
+                Help
+                </div>
 
 
               <div style={{"position" : "absolute", "top" : "124px", "left":"134px", "width":"558px"}}>
